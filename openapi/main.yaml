@@ -13,17 +13,6 @@ paths:
       tags:
         - product
       description: Get Product Information
-      # parameters:
-      #   - in: query
-      #     name: parameters
-      #     required: false
-      #     schema:
-      #       type: object
-      #       properties:
-      #         UserID : 
-      #           type: string
-      #         Product: 
-      #           type: object
            
       responses:
         '200':
