@@ -3,11 +3,12 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.parameters import Parameters  # noqa: F401
+from openapi_server.models.inline_object import InlineObject  # noqa: F401
+from openapi_server.models.product import Product  # noqa: F401
 
 
-def test_product_get(client: TestClient):
-    """Test case for product_get
+def test_products_get(client: TestClient):
+    """Test case for products_get
 
     Get the products in the store / main page
     """
@@ -16,7 +17,7 @@ def test_product_get(client: TestClient):
     }
     response = client.request(
         "GET",
-        "/product",
+        "/products",
         headers=headers,
     )
 
@@ -24,19 +25,20 @@ def test_product_get(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_product_post(client: TestClient):
-    """Test case for product_post
+def test_products_post(client: TestClient):
+    """Test case for products_post
 
     Add a new product to the store
     """
-    params = [("parameters", {'key': openapi_server.Parameters()})]
+    inline_object = openapi_server.InlineObject()
+
     headers = {
     }
     response = client.request(
         "POST",
-        "/product",
+        "/products",
         headers=headers,
-        params=params,
+        json=inline_object,
     )
 
     # uncomment below to assert the status code of the HTTP response

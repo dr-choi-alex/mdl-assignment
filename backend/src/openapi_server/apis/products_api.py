@@ -16,37 +16,41 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.parameters import Parameters
+from models.extra_models import TokenModel  # noqa: F401
+from models.inline_object import InlineObject
+from models.product import Product
 
 
 router = APIRouter()
 
 
 @router.get(
-    "/product",
+    "/products",
     responses={
-        200: {"model": object, "description": "Success Resopnse"},
+        200: {"model": List[Product], "description": "Success Resopnse"},
     },
-    tags=["product"],
+    tags=["products"],
     summary="Get the products in the store / main page",
 )
-async def product_get(
-) -> object:
-    """Get Product Information"""
-    ...
+async def products_get(
+# ) -> List[Product]:
+#     """Get Products Information"""
+#     ...
+) : return {"name" : "jihun", "age" : 32}
 
 
 @router.post(
-    "/product",
+    "/products",
     responses={
         201: {"model": str, "description": "Success Resopnse with path param"},
         400: {"model": str, "description": "Fail Resopnse with path param"},
     },
-    tags=["product"],
+    tags=["products"],
     summary="Add a new product to the store",
 )
-async def product_post(
-    parameters: Parameters = Query(None, description="Add data to DB by sending product information."),
-) -> str:
-    ...
+async def products_post(
+    price : int,
+    inline_object: InlineObject = Body(None, description=""),
+# ) -> str:
+#      ...
+) : return price * 100

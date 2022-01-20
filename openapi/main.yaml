@@ -4,7 +4,7 @@ info:
   description: Shopping Mall Demo
   version: '1.0'
 servers:
-  - url: http://localhost:4200/#/
+  - url: http://localhost:5000/#/
 paths:
   /products:
     description: Product Information
@@ -26,23 +26,23 @@ paths:
       tags:
         - products
       summary: Add a new product to the store
-      parameters:
-        - in: query
-          description: Add data to DB by sending product information.
-          name: parameters
-          required: true
-          schema:
-            type: object
-            properties:
-              ObjectID:
-                type: string
-              ProductName:
-                type: string
-              Price:
-                type: integer
-              Image:
-                type: string
-                format: binary
+
+      requestBody:
+        description: Add data to DB by sending product information.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ObjectID:
+                  type: string
+                ProductName:
+                  type: string
+                Price:
+                  type: integer
+                Image:
+                  type: string
 
       responses:
         '201':
@@ -68,23 +68,24 @@ paths:
       summary: Create User
       tags:
         - users
-      parameters:
-        - in: query
-          description: Add data to DB by sending user information.
-          name: register
-          required: true
-          schema:
-            type: object
-            properties:
-              UserName:
-                type: string
-              UserID:
-                type: string
-              Password:
-                type: string
-              E-Mail:
-                type: string
-              
+
+      requestBody:
+        description: Add data to DB by sending user information.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                UserName:
+                  type: string
+                UserID:
+                  type: string
+                Password:
+                  type: string
+                E-Mail:
+                  type: string
+
       responses:
         '201':
           description: Success Resopnse with path param
@@ -174,19 +175,20 @@ paths:
       tags:
         - sign
       summary: Login User
-      parameters:
-        - in: query
-          description: Send the user's id and password to find out appropriate DB data.
-          name: UserID, Password
-          required: true
-          schema:
-            type: object
-            properties:
-              UserID:
-                type: string
-              Password: 
-                type: string
-          
+
+      requestBody:
+        description: Send the user's id and password to find out appropriate DB data.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                UserID:
+                  type: string
+                Password: 
+                  type: string
+
       responses:
         '201':
           description: Success Resopnse with path param
@@ -215,23 +217,24 @@ paths:
       tags:
         - sign
       summary: Logout User
-      parameters:
-        - in: query
-          description: Add data to DB by sending user information.
-          name: register
-          required: true
-          schema:
-            type: object
-            properties:
-              UserName:
-                type: string
-              UserID:
-                type: string
-              Password:
-                type: string
-              E-Mail:
-                type: string
-              
+
+      requestBody:
+        description: Add data to DB by sending user information.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                UserName:
+                  type: string
+                UserID:
+                  type: string
+                Password:
+                  type: string
+                E-Mail:
+                  type: string
+
       responses:
         '201':
           description: Success Resopnse with path param
@@ -255,23 +258,24 @@ paths:
       tags:
         - sign
       summary: Logout User
-      parameters:
-        - in: query
-          description: Add data to DB by sending user information.
-          name: register
-          required: true
-          schema:
-            type: object
-            properties:
-              UserName:
-                type: string
-              UserID:
-                type: string
-              Password:
-                type: string
-              E-Mail:
-                type: string
-              
+
+      requestBody:
+        description: Add data to DB by sending user information.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                UserName:
+                  type: string
+                UserID:
+                  type: string
+                Password:
+                  type: string
+                E-Mail:
+                  type: string
+
       responses:
         '201':
           description: Success Resopnse with path param
@@ -288,42 +292,3 @@ paths:
               schema:
                 type: string     
                 example: 400 error. Fail to register.
-
-  /test:
-    description: Add data to DB by sending product information.
-    post:
-      summary: RequestBody Test
-
-      responses:
-        '201':
-          description: Success Resopnse with path param
-      requestBody:
-        $ref: '#/components/requestBodies/UserArray'
-
-components:
-  schemas:
-    Product:
-      $ref: './components/product.yaml' 
-    user:
-      $ref: './components/user.yaml' 
-    carts:
-      $ref: './components/carts.yaml'
-  requestBodies:
-    Pet:
-      content:
-        application/json:
-          schema:
-            $ref: './components/user.yaml' 
-        application/xml:
-          schema:
-            $ref: './components/user.yaml' 
-      description: Pet object that needs to be added to the store
-      required: true
-    UserArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: './components/user.yaml' 
-      description: List of user object zzz
