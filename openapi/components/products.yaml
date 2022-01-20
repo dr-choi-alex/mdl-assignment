@@ -1,0 +1,14 @@
+type: array
+items: 
+  $ref: './product.yaml'
+
+example:
+  - ObjectID: 3
+    ProductName: car1
+    Price: 1000
+    ImagePath: C:\Users\jusong\Desktop\car.jpg
+  
+  - ObjectID: 4
+    ProductName: car2
+    Price: 2000
+    ImagePath: C:\Users\jusong\Desktop\car2.jpg  

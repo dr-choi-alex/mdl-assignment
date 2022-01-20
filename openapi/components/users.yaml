@@ -1,0 +1,17 @@
+type: array
+items: 
+  $ref: './user.yaml'
+  
+example:
+  - UserType: Seller
+    UserName: JS
+    UserID: junseok.song
+    Email: junseok.song@cognex.com
+  - UserType: Buyer
+    UserName: JH
+    UserID: jihun
+    Email: jihun.pak@cognex.com
+  - UserType: Buyer
+    UserName: DK
+    UserID: daeseon
+    Email: daeseon.park@cognex.com

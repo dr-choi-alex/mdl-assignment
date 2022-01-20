@@ -1,55 +1,15 @@
-type: array
-items: 
-  type: object
-  properties:
-    ObjectID:
-      type: integer
-    UserType:
-      type: string
-    UserName:
-      type: string
-    UserID:
-      type: string
-    Password:
-      type: string
-    Email:
-      type: string
-    UserCartList:
-      type: array
-      items:
-        type: object
-        properties:          
-          Product:
-            type: object
-            $ref: 'product.yaml'
-          Count:
-            type: integer
+type: object
+properties:
+  UserType:
+    type: string
+    example: Seller
+  UserName:
+    type: string
+    example: Test
+  UserID:
+    type: string
+    example: TestUser
+  Email:
+    type: string
+    example: TestUser@test.com
           
-example:
-  - ObjectID: 1
-    UserType: Seller
-    UserName: JS
-    UserID: junseok.song
-    Password: cognex
-    Email: junseok.song@cognex.com
-    UserCartList: 
-      ObjectID: 3
-      Count: 5
-  - ObjectID: 2
-    UserType: Buyer
-    UserName: JH
-    UserID: jihun
-    Password: cognex123
-    Email: jihun.pak@cognex.com
-    UserCartList: 
-      ObjectID: 4
-      Count: 6
-  - ObjectID: 3
-    UserType: Buyer
-    UserName: DK
-    UserID: daeseon
-    Password: cognex456
-    Email: daeseon.park@cognex.com
-    UserCartList: 
-      ObjectID: 4
-      Count: 6

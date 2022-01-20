@@ -1,23 +1,15 @@
-type: array
-items: 
-  type: object
-  properties:
-    ObjectID:
-      type: integer
-    ProductName:
-      type: string
-    Price:
-      type: integer
-    ImagePath:
-      type: string
-      
-example:
-  - ObjectID: 3
-    ProductName: car1
-    Price: 1000
-    ImagePath: C:\Users\jusong\Desktop\car.jpg
-  
-  - ObjectID: 4
-    ProductName: car2
-    Price: 2000
-    ImagePath: C:\Users\jusong\Desktop\car2.jpg  
+type: object
+properties:
+  ObjectID:
+    type: integer
+    example: 1
+  ProductName:
+    type: string
+    example: car
+  Price:
+    type: integer
+    example: 2000
+  ImageUrl:
+    type: string
+    example: /car2.jpg
+    
