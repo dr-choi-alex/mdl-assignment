@@ -15,13 +15,55 @@ from fastapi import FastAPI
 from apis.products_api import router as ProductsApiRouter
 from apis.sign_api import router as SignApiRouter
 from apis.users_api import router as UsersApiRouter
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI(
     title="MDL Assignment",
     description="Shopping Mall Demo",
     version="1.0",
 )
+origins = [
+    "http://localhost",
+    "http://localhost:4200",
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class User(BaseModel):
+    userID: str
+    password: str
+    
+class Register(BaseModel):
+    usertype : str
+    username: str
+    userID : str
+    password : str
+    email : str
+    
 app.include_router(ProductsApiRouter)
 app.include_router(SignApiRouter)
 app.include_router(UsersApiRouter)
+
+@app.post('/login')
+def login(user: User):
+    userID = user.userID
+    password = user.password
+    
+    return "login Successed"
+
+@app.post('/register')
+def register(user : Register):
+    usertype = user.usertype
+    username = user.username
+    userID = user.userID
+    password = user.password
+    email = user.email
+    
+    return "register Succeessed"
