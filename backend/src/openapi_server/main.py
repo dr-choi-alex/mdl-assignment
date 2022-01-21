@@ -18,6 +18,34 @@ from apis.sign_api import router as SignApiRouter
 from apis.users_api import router as UsersApiRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import psycopg2
+
+# Postgresql 연동
+db = psycopg2.connect(host='10.99.80.67', dbname='postgres',user='testuser',password='1234',port=5432)
+cursor=db.cursor()
+
+def execute(self,query,args={}):
+    self.cursor.execute(query,args)
+    row = self.cursor.fetchall()
+    return row
+
+def insertDB(schema,table,colum,data):
+    sql = " INSERT INTO {schema}.{table}({colum}) VALUES ('{data}') ;".format(schema=schema,table=table,colum=colum,data=data)
+    try:
+        cursor.execute(sql)
+        db.commit()
+    except Exception as e :
+        print(" insert DB  ",e) 
+        
+def readDB(table,colum):
+    sql = " SELECT {colum} from {table}".format(colum=colum,table=table)
+    try:
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    except Exception as e :
+        result = (" read DB err",e)
+    
+    return result
 
 app = FastAPI(
     title="MDL Assignment",
@@ -59,6 +87,8 @@ def login(user: User):
     userID = user.userID
     password = user.password
     
+    print(readDB(table="users",colum="login_id, password"))
+       
     return "login Successed"
 
 @app.post('/register')
