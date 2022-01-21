@@ -1,0 +1,34 @@
+<!-- src/app/login/login.component.html -->
+
+<div class="page page-login">
+  <form
+    [formGroup]="loginForm" 
+    class="login-form form-horizontal"
+    (ngSubmit) = 'onSubmit()'
+  >  <!-- 1 -->
+    <div class="contentBox">
+      <h3 class="contentBoxTop">Login</h3>
+      <fieldset>
+          <label for="username" class="col-sm-3 control-label" width='1000px'>Username</label>
+          <div class="col-sm-9">
+            <input class="form-control" type="text" formControlName="username" id="username" name="username" value="">
+      
+          </div>
+          <label for="password" class="col-sm-3 control-label">Password</label>
+          <div class="col-sm-9">
+            <input class="form-control" type="password" formControlName="password" id="password" name="password" value=""> 
+           
+          </div>
+    
+      </fieldset>
+      <div *ngIf="errorResponse?.message" class="alert alert-danger">
+        {{errorResponse?.message}}
+      </div>
+    </div>
+    <div class="buttons">
+      <input class="btn btn-default" type="submit" value="Submit">
+      <a routerLink="../register" class="btn-register">Register</a>
+    </div>
+  </form>
+</div>
+

@@ -1,0 +1,28 @@
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+          
+            <a class="navbar-brand" [routerLink]="['./']"><label class="logo">Shopping</label></a>
+        </div>
+
+        <!-- Hide for mobile devices -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <!-- Right Menu -->
+            <ul *ngIf="menuList" class="nav navbar-nav navbar-right">
+                <!-- User ID Label -->
+                <li><label class="userIDLabel"> </label></li>
+                <!-- Log In -->
+                <li><a [routerLink]="'./log-in'" class="login"> Log In </a></li>
+                <!-- Add Product -->
+                <li><a [routerLink]="'./product'" class="product"> Product </a></li>
+                <!-- Shopping Cart -->
+                <li><a [routerLink]="'./shopping-cart'" class="cart">Shopping Cart<span class="badge my-badge">{{dataService.shoppingCartData.length}}</span></a></li>
+                <!-- Log out -->
+                <li><a [routerLink]="'./product'" class="logout">Log out</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+

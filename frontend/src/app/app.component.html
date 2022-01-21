@@ -1,0 +1,22 @@
+<app-header></app-header>
+<router-outlet></router-outlet>
+
+<!-- Notification Service -->
+<notifier-container></notifier-container>
+
+<!-- Side Shopping Cart -->
+<a class="hidden-xs cart" [routerLink]="'./shopping-cart'"><span class="counter">{{dataService.shoppingCartData.length}}</span></a>
+
+<!--
+<ul class="nav navbar-nav navbar-right">
+    <li *ngIf="!authService.isLoggedIn()" [routerLinkActive]="['active']"> 
+      <a [routerLink]="['/','login']">Login</a>
+    </li>
+    <li *ngIf="!authService.isLoggedIn()" [routerLinkActive]="['active']"> 
+      <a [routerLink]="['/','users','new']">Sign Up</a>
+    </li>
+    <li *ngIf="authService.isLoggedIn()">  
+      <a (click)="authService.logout()">Logout</a>
+    </li>
+  </ul>
+-->
