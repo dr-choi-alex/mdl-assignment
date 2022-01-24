@@ -12,35 +12,34 @@ export class AuthService {
 
   isloggedin = false;
 
-  private setLocalStorage(key: string, value: any) {
-    localStorage.setItem(key, JSON.stringify(value));
+  private setSessionStorage(key: string, value: any) {
+    sessionStorage.setItem(key, JSON.stringify(value));
   }
 
-  private getLocalStorage(key: string) {
-    return JSON.parse(localStorage.getItem(key));
+  private getSessionStorage(key: string) {
+    return JSON.parse(sessionStorage.getItem(key));
   }
 
-  private removeLocalStorage(key: string) {
-    localStorage.removeItem(key);
+  private removeSessionStorage(key: string) {
+    sessionStorage.removeItem(key);
   }
   
   constructor(
   ) {}
   
   getUserDetails() {
-      return localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')||'{}') : null;
+      return sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')||'{}') : null;
   }
   
   setDataInLocalStorage(variableName: string, data: string) {
-      localStorage.setItem(variableName, data);
+    sessionStorage.setItem(variableName, data);
   }
 
 
   getUser(): any {
-    const userID = window.localStorage.getItem(USER_INFO_KEY);
+    const userID = window.sessionStorage.getItem(USER_INFO_KEY);
     if (userID) {
       console.log(userID)
-      this.isloggedin = true;
       return JSON.parse(userID);
     }
 
@@ -48,16 +47,16 @@ export class AuthService {
   }
 
   getUserInfo(){
-    return this.getLocalStorage(USER_INFO_KEY);
+    return this.getSessionStorage(USER_INFO_KEY);
   }
 
   saveUserInfo(data: UserInfo){
-    this.removeLocalStorage(USER_INFO_KEY);
-    this.setLocalStorage(USER_INFO_KEY, data);
+    this.removeSessionStorage(USER_INFO_KEY);
+    this.setSessionStorage(USER_INFO_KEY, data);
   }
 
   logout() :void{
-    this.removeLocalStorage(USER_INFO_KEY);
+    this.removeSessionStorage(USER_INFO_KEY);
     this.isloggedin = false;
   }
 

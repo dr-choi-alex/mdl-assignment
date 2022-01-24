@@ -10,15 +10,15 @@
             <!-- Right Menu -->
             <ul *ngIf="menuList" class="nav navbar-nav navbar-right">
                 <!-- User ID Label -->
-                <li><label *ngIf="checkStatus==true" class="userIDLabel">abc </label></li>
+                <li><a *ngIf="checkStatus==true" class="userIDLabel"> UserID = {{UserIDValue}} </a></li>
                 <!-- Log In -->
-                <li><a [routerLink]="'./log-in'" class="login"> Log In </a></li>
+                <li><a *ngIf="checkStatus==false" [routerLink]="'./log-in'" class="login"> Log In </a></li>
                 <!-- Add Product -->
                 <li><a [routerLink]="'./product'" class="product"> Product </a></li>
                 <!-- Shopping Cart -->
                 <li><a [routerLink]="'./shopping-cart'" class="cart">Shopping Cart<span class="badge my-badge">{{dataService.shoppingCartData.length}}</span></a></li>
                 <!-- Log out -->
-                <li><a (click)="logout()" [routerLink]="'./'" class="logout">Log out</a></li>
+                <li><a *ngIf="checkStatus==true" (click)="logout()" [routerLink]="'./'" class="logout">Log out</a></li>
             </ul>
         </div>
     </div>

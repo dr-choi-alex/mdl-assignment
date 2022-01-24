@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class HeaderComponent implements OnInit {
   menuList: MenuInfo[] = [];
   checkStatus : boolean;
+  UserIDValue :string;
   
   constructor(
     public dataService: DataService,
@@ -29,8 +30,10 @@ export class HeaderComponent implements OnInit {
   }
 
   getUserID() :boolean {
-    if(this.authService.getUser() !== ""){
+    if(this.authService.getUser().userID != undefined ){
+      console.log(this.authService.getUser().userID)
       console.log("true");
+      this.UserIDValue = this.authService.getUser().userID
       return true
     }
     else {
