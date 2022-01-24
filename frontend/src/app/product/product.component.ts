@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -15,18 +14,16 @@ export class ProductComponent implements OnInit {
   
   form: FormGroup
 
-  constructor(public fb: FormBuilder, private http: HttpClient) { }
+  constructor(public fb: FormBuilder) { }
   imageSrc: string;
   ngOnInit(): void {
     this.form = this.fb.group({
       productname: ['', Validators.required],
-      productprice:[0, Validators.required],
+      productprice:['', Validators.required],
       file:['', Validators.required],
       fileSource:['', Validators.required]
     });
   }
-
-  
 
   onFileChange(event) {
     const reader = new FileReader();
@@ -48,24 +45,13 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  
-
   onSubmit(){
-
-    const body = {}
-    
-    this.http.get('http://localhost:5000/products')
-    .subscribe(res => {
-        console.log(res)
-    });
-
-    this.http.post('http://localhost:5000/products', body, {
-      params: new HttpParams().set('price', this.form.value.productprice),
-    })
-    .subscribe(res => {
-      console.log(res)
-    });
-
+    console.log(this.form.value);
+    // this.http.post('http://localhost:8001/upload.php', this.myForm.value)
+    //   .subscribe(res => {
+    //     console.log(res);
+    //     alert('Uploaded Successfully.');
+    //   })
   }
    
   // preview(files: any){

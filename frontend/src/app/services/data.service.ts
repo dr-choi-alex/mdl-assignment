@@ -4,7 +4,8 @@ import {
   ProductInfo,
   CategoryInfo,
   ShoppingCartItem,
-  OrderInfo
+  OrderInfo,
+  UserInfo
 } from '../interface/ec-template.interface';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 
 const SHOPPING_CART_KEY = 'shopping-cart-data';
 const ORDER_INFO_KEY = 'order-info';
+const USER_INFO_KEY = 'user-info'
 
 @Injectable({
   providedIn: 'root'
@@ -189,6 +191,7 @@ export class DataService {
     return this.getLocalStorage(ORDER_INFO_KEY);
   }
 
+
   submitOrder(order: OrderInfo) {
     console.log('Order Info:', order);
     this.notifierService.notify('default', 'Submit Success');
@@ -200,4 +203,6 @@ export class DataService {
       this.router.navigate(['shopping-cart']);
     }, 2000);
   }
+
+ 
 }

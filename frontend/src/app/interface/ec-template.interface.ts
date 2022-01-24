@@ -33,6 +33,12 @@ export interface ProductInfo {
   inStock: boolean;
 }
 
+export interface UserInfo {
+  userid: string;
+  password: string;
+  
+}
+
 export interface CategoryInfo {
   name: string;
   redirect: string;

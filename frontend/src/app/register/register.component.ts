@@ -32,7 +32,15 @@ export class RegisterComponent implements OnInit {
     console.log(b)
     this._api.postTypeRequest('register', b).subscribe((res: any) => {
       console.log(res)
-     
+      if(res.value == "Success")
+      {
+        alert(`Register ${res}.`)
+        
+      }
+      else 
+      {
+        alert(`Register ${res}.`)
+      }
     }, err => {
       console.log(err)
     });
