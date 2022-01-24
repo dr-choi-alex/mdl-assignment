@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiService } from '../services/api.service'
 
 @Component({
   selector: 'app-product',
@@ -7,21 +8,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-
-  // public imagePath: any;
-  // imgURL: any;
-  // public message: string;
   
   form: FormGroup
+  imageSrc: string
 
-  constructor(public fb: FormBuilder) { }
-  imageSrc: string;
+  constructor(public fb: FormBuilder, private _api : ApiService,) { }
+
   ngOnInit(): void {
     this.form = this.fb.group({
-      productname: ['', Validators.required],
-      productprice:['', Validators.required],
-      file:['', Validators.required],
-      fileSource:['', Validators.required]
+      name: ['', Validators.required],
+      price:[0, Validators.required],
+      description:['', Validators.required],
+      image:['', Validators.required]
     });
   }
 
@@ -37,7 +35,7 @@ export class ProductComponent implements OnInit {
         this.imageSrc = reader.result as string;
      
         this.form.patchValue({
-          fileSource: reader.result
+          image: reader.result
         });
    
       };
@@ -45,30 +43,37 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  onSubmit(){
-    console.log(this.form.value);
-    // this.http.post('http://localhost:8001/upload.php', this.myForm.value)
-    //   .subscribe(res => {
-    //     console.log(res);
-    //     alert('Uploaded Successfully.');
-    //   })
-  }
-   
-  // preview(files: any){
-  //   if(files.length ===0)
-  //     return;
-  //   var mimeType = files[0].type;
-  //   if (mimeType.match(/image\/*/) == null) {
-  //     this.message = "Only images are supported.";
-  //     return;
-  //   }
+  onSubmit() {
+
+    if (this.form.invalid) {
+      alert('check your form')
+    } else{
+      const body = this.form.value
+
+      //console.log(body)
   
-  //   var reader = new FileReader();
-  //   this.imagePath = files;
-  //   reader.readAsDataURL(files[0]); 
-  //   reader.onload = (_event) => { 
-  //     this.imgURL = reader.result; 
-  //   }
-  // }
+      if(this.form.value.name !== ''){
+        this._api.postTypeRequest('products', body).subscribe((res: any) => {
+          console.log(res)
+          alert('db update')
+          window.location.reload(); //page reload
+        }, err => {
+          console.log(err)
+        });
+      }
+    }
+
+  
+    
+    // //get products
+    // this._api.getTypeRequest('products').subscribe((res: any) => {
+    //    console.log(res)
+    //    //this.imageSrc = res
+    // }, err => {
+    //    console.log(err)
+    // });
+  }
+
+   
 
 }

@@ -19,9 +19,16 @@ from fastapi import (  # noqa: F401
 from models.extra_models import TokenModel  # noqa: F401
 from models.inline_object import InlineObject
 from models.product import Product
+from pydantic import BaseModel
 
 
 router = APIRouter()
+
+class Product(BaseModel):
+    name : str
+    price: int
+    description : str
+    image : str
 
 
 @router.get(
@@ -36,7 +43,22 @@ async def products_get(
 # ) -> List[Product]:
 #     """Get Products Information"""
 #     ...
-) : return {"name" : "jihun", "age" : 32}
+) :
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+
+    connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
+    
+    # Create a cursor to perform database operations
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+    
+    # read DB
+    sqlString = "SELECT * FROM products"
+    cursor.execute(sqlString)
+    rows = cursor.fetchall()
+    
+    return rows
+
 
 
 @router.post(
@@ -49,8 +71,24 @@ async def products_get(
     summary="Add a new product to the store",
 )
 async def products_post(
-    price : int,
-    inline_object: InlineObject = Body(None, description=""),
+    product : Product,
+    # inline_object: InlineObject = Body(None, description=""),
 # ) -> str:
 #      ...
-) : return price * 100
+) : 
+    
+
+
+    import psycopg2
+
+    connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
+    
+    # Create a cursor to perform database operations
+    cursor = connection.cursor()
+    
+    # write DB
+    sqlString = "INSERT INTO products (name, img_addr, description, price) VALUES (%s, %s, %s, %s);"
+    cursor.execute(sqlString, (product.name, product.image, product.description, product.price) )
+    connection.commit()
+    
+    return {"name" : product.name, "image" : product.image, "price" : product.price, "description" : product.description}

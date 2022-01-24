@@ -5,28 +5,37 @@
         <div >
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <div class="form-group">
-                    <label class="form-group">Product Name</label>
-                    <input type="text" formControlName="productname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
-                    <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                        <div *ngIf="f.username.errors.required">Username is required</div>
+                    <label class="name">Name</label>
+                    <input type="text" formControlName="name" id="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">name is required</div>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="price">Price</label>
+                    <input type="number" formControlName="price" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Price is required</div>
                     </div>
-        
-                    <div class="form-group">
-                        <label class="price">Product Price</label>
-                        <input type="text" formControlName="productprice" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ID.errors }" />
-                        <div *ngIf="submitted && f.ID.errors" class="invalid-feedback">
-                            <div *ngIf="f.ID.errors.required">ID is required</div>
-                        </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="description">Description</label>
+                    <input type="text" formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Description is required</div>
                     </div>
-                    <div class="form-group">
-                        <label for="image">Image</label>
-                        <!-- <input #file type="file" accept="image/*" (change)="preview(file.files)"> -->
-                        <input #file type="file" accept="image/*" (change)="onFileChange($event)">
-                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                            <div *ngIf="f.password.errors.required">Image is required</div>
-                        </div>
-                    </div>  
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Image</label>
+                    <!-- <input #file type="file" accept="image/*" (change)="preview(file.files)"> -->
+                    <input #file type="file" accept="image/*" (change)="onFileChange($event)">
+                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Image is required</div>
+                    </div>
+                </div>
 
 
                     <!-- Submit button -->
@@ -35,7 +44,6 @@
                             <a class="btn btn-primary" (click)="onSubmit()">
                                 상품 등록
                             </a>
-                            <a routerLink="../" class="btn btn-link">Cancel</a> 
                         </div>
                     </div>
                       

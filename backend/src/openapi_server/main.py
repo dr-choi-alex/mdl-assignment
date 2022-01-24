@@ -23,32 +23,32 @@ import psycopg2
 import datetime
 
 # Postgresql 연동
-db = psycopg2.connect(host='localhost', dbname='postgres',user='postgres',password='1234',port=5432)
+#db = psycopg2.connect(host='localhost', dbname='postgres',user='postgres',password='1234',port=5432)
 #db = psycopg2.connect(host='10.99.80.67', dbname='postgres',user='testuser',password='1234',port=5432)
-cursor=db.cursor()
+#cursor=db.cursor()
 
-def execute(self,query,args={}):
-    self.cursor.execute(query,args)
-    row = self.cursor.fetchall()
-    return row
+# def execute(self,query,args={}):
+#     self.cursor.execute(query,args)
+#     row = self.cursor.fetchall()
+#     return row
 
-def insertDB(table,colum,data):
-    sql = " INSERT INTO {table}({colum}) VALUES ('{data}') ;".format(table=table,colum=colum,data=data)
-    try:
-        cursor.execute(sql)
-        db.commit()
-    except Exception as e :
-        print(" insert DB  ",e) 
+# def insertDB(table,colum,data):
+#     sql = " INSERT INTO {table}({colum}) VALUES ('{data}') ;".format(table=table,colum=colum,data=data)
+#     try:
+#         cursor.execute(sql)
+#         db.commit()
+#     except Exception as e :
+#         print(" insert DB  ",e) 
         
-def readDB(table,colum, query):
-    sql = " SELECT {colum} from {table} {query}".format(colum=colum,table=table, query=query)
-    try:
-        cursor.execute(sql)
-        result = cursor.fetchall()
-    except Exception as e :
-        result = (" read DB err",e)
+# def readDB(table,colum, query):
+#     sql = " SELECT {colum} from {table} {query}".format(colum=colum,table=table, query=query)
+#     try:
+#         cursor.execute(sql)
+#         result = cursor.fetchall()
+#     except Exception as e :
+#         result = (" read DB err",e)
     
-    return result
+#     return result
 
 app = FastAPI(
     title="MDL Assignment",
@@ -73,58 +73,58 @@ app.include_router(SignApiRouter)
 app.include_router(UsersApiRouter)
 
 
-# 준석 sample code
-class User(BaseModel):
-    userID: str
-    password: str
+# # 준석 sample code
+# class User(BaseModel):
+#     userID: str
+#     password: str
     
-class Register(BaseModel):
-    usertype : str
-    username: str
-    userID : str
-    password : str
-    email : str
+# class Register(BaseModel):
+#     usertype : str
+#     username: str
+#     userID : str
+#     password : str
+#     email : str
 
-@app.post('/login')
-def login(user: User):
-    userID = user.userID
-    password = user.password
+# @app.post('/login')
+# def login(user: User):
+#     userID = user.userID
+#     password = user.password
     
-    print(readDB(table="users",colum="login_id, password", query="where login_id = {userID} and password = {password}"))
+#     print(readDB(table="users",colum="login_id, password", query="where login_id = {userID} and password = {password}"))
     
-    # 아이디를 찾았을 때
-    usertype = "seller"    
+#     # 아이디를 찾았을 때
+#     usertype = "seller"    
     
     
-    # 아이디 찾기에 실패했을 때
+#     # 아이디 찾기에 실패했을 때
        
-    return {
-        "userID" : userID,
-        "usertype" : usertype
-    }
+#     return {
+#         "userID" : userID,
+#         "usertype" : usertype
+#     }
 
-@app.post('/register')
-def register(user : Register):
-    usertype = user.usertype
-    username = user.username
-    userID = user.userID
-    password = user.password
-    email = user.email
-    return_value = ""
+# @app.post('/register')
+# def register(user : Register):
+#     usertype = user.usertype
+#     username = user.username
+#     userID = user.userID
+#     password = user.password
+#     email = user.email
+#     return_value = ""
     
-    try :
-        sqlString = "INSERT INTO users (login_id, password, email, full_name, type) VALUES (%s, %s, %s, %s, %s);"
+#     try :
+#         sqlString = "INSERT INTO users (login_id, password, email, full_name, type) VALUES (%s, %s, %s, %s, %s);"
 
-        cursor.execute(sqlString, (userID, password, email, username, usertype) )
-        db.commit()
-        print("register Successful.")
-        return_value = "Success"
+#         cursor.execute(sqlString, (userID, password, email, username, usertype) )
+#         db.commit()
+#         print("register Successful.")
+#         return_value = "Success"
     
-    except Exception as e :
-        print(" insert DB  ",e)
-        return_value = "Fail"
-        db.commit()
+#     except Exception as e :
+#         print(" insert DB  ",e)
+#         return_value = "Fail"
+#         db.commit()
     
-    # insertDB(table="users",colum="login_id, password, email, full_name, type", data=f"{userID},{password},{email},{username},0")
+#     # insertDB(table="users",colum="login_id, password, email, full_name, type", data=f"{userID},{password},{email},{username},0")
     
-    return return_value
+#     return return_value
