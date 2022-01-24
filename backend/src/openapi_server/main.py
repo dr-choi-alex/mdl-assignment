@@ -10,6 +10,7 @@
 """
 
 
+from time import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -19,9 +20,11 @@ from apis.users_api import router as UsersApiRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import psycopg2
+import datetime
 
 # Postgresql 연동
-db = psycopg2.connect(host='10.99.80.67', dbname='postgres',user='testuser',password='1234',port=5432)
+db = psycopg2.connect(host='localhost', dbname='postgres',user='postgres',password='1234',port=5432)
+#db = psycopg2.connect(host='10.99.80.67', dbname='postgres',user='testuser',password='1234',port=5432)
 cursor=db.cursor()
 
 def execute(self,query,args={}):
@@ -29,16 +32,16 @@ def execute(self,query,args={}):
     row = self.cursor.fetchall()
     return row
 
-def insertDB(schema,table,colum,data):
-    sql = " INSERT INTO {schema}.{table}({colum}) VALUES ('{data}') ;".format(schema=schema,table=table,colum=colum,data=data)
+def insertDB(table,colum,data):
+    sql = " INSERT INTO {table}({colum}) VALUES ('{data}') ;".format(table=table,colum=colum,data=data)
     try:
         cursor.execute(sql)
         db.commit()
     except Exception as e :
         print(" insert DB  ",e) 
         
-def readDB(table,colum):
-    sql = " SELECT {colum} from {table}".format(colum=colum,table=table)
+def readDB(table,colum, query):
+    sql = " SELECT {colum} from {table} {query}".format(colum=colum,table=table, query=query)
     try:
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -87,9 +90,18 @@ def login(user: User):
     userID = user.userID
     password = user.password
     
-    print(readDB(table="users",colum="login_id, password"))
+    print(readDB(table="users",colum="login_id, password", query="where login_id = {userID} and password = {password}"))
+    
+    # 아이디를 찾았을 때
+    usertype = "seller"    
+    
+    
+    # 아이디 찾기에 실패했을 때
        
-    return "login Successed"
+    return {
+        "userID" : userID,
+        "usertype" : usertype
+    }
 
 @app.post('/register')
 def register(user : Register):
@@ -98,5 +110,21 @@ def register(user : Register):
     userID = user.userID
     password = user.password
     email = user.email
+    return_value = ""
     
-    return "register Succeessed"
+    try :
+        sqlString = "INSERT INTO users (login_id, password, email, full_name, type) VALUES (%s, %s, %s, %s, %s);"
+
+        cursor.execute(sqlString, (userID, password, email, username, usertype) )
+        db.commit()
+        print("register Successful.")
+        return_value = "Success"
+    
+    except Exception as e :
+        print(" insert DB  ",e)
+        return_value = "Fail"
+        db.commit()
+    
+    # insertDB(table="users",colum="login_id, password, email, full_name, type", data=f"{userID},{password},{email},{username},0")
+    
+    return return_value
