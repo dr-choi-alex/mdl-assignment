@@ -42,6 +42,7 @@ export interface CartProductInfo {
   description: string;
   price: string;
   created_at: string;
+  quantity : string;
 }
 
 
@@ -65,9 +66,10 @@ export interface ShoppingCartItem {
 }
 
 export interface ShoppingCartItemList {
-  product: ProductInfo;
+  id: number;
+  user_id: number;
+  product_id: number;
   quantity: number;
-  option: DropdownItem;
 }
 
 export interface OrderInfo {

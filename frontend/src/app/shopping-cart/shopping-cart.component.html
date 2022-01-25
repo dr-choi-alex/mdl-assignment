@@ -16,18 +16,17 @@
                 <div class="info-wrap">
                     <!-- Product Info -->
                     <div class="cart-section product-info">
-                        <img [src]="item.product.img">
-                        <p class="item-number">#{{item.product.id}}</p>
-                        <h3 class="item-name">{{item.product.name}} - {{item.option.name}}</h3>
+                        <img [src]="item.img_addr">
+                        <p class="item-number">#{{item.id}}</p>
+                        <h3 class="item-name">{{item.name}}</h3>
                         <p class="qty">
-                            <input type="text" class="qty-input" [(ngModel)]="item.quantity" (keyup)="updateItem(item)">
-                            x ${{item.product.onSale? item.product.salePrice: item.product.costPrice}}
+                            <input type="text" class="qty-input" [(ngModel)]="cart_data[i].quantity" >
+                            x ${{item.price}}
                         </p>
-                        <p class="stock-status" [class.out-stock]="!item.product.inStock">{{item.product.inStock? "In Stock": "Out of Stock"}}</p>
                     </div>
                     <!-- Total Price -->
                     <div class="cart-section price-total">
-                        <p>${{getTotalPrice(item)}}</p>
+                        <p>${{getProductPrice(item,i)}}</p>
                     </div>
                     <div class="cart-section remove-wrap">
                         <!-- <a class="remove-button" (click)="removeItem(item)">x</a> -->
@@ -49,12 +48,6 @@
             </div>
             <div class="section-body">
                 <div>
-                    <div class="price-info">
-                        <span class="pull-left">Subtotal</span>
-                        <span class="pull-right">${{subTotal}}</span>
-                    </div>
-                  
-                    <hr>
                     <div class="price-info total">
                         <span class="pull-left">Total</span>
                         <span class="pull-right">${{total}}</span>

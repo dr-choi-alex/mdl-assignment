@@ -155,8 +155,8 @@ def shoppingCart(user:UserID):
         result = conn.selectDB("users", "id", "where login_id = %s", userID )
 
         user_id = result[0].get("id")
-
-        cart_info = conn.selectDB("carts", "*", "user_id = %d", user_id)
+        print(user_id)
+        cart_info = conn.selectDB("carts", "*", "where user_id = %s", user_id)
 
         if cart_info is None or len(cart_info) == 0:
             return {}
@@ -165,7 +165,7 @@ def shoppingCart(user:UserID):
         for info in cart_info:
             cond = "{a} {b},".format(a=cond, b=info.get("product_id"))
 
-        product_info = conn.selectDB("products", "*", "where id in ({cond})".format(cond=cond[:-2]) )
+        product_info = conn.selectDB("products", "*", "where id in ({cond})".format(cond=cond[:-1]) )
        
         return { "product_info": product_info, "cart_info" :cart_info }
     
