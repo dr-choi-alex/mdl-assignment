@@ -156,7 +156,7 @@ def shoppingCart(user:UserID):
 
         user_id = result[0].get("id")
 
-        cart_info = conn.selectDB("carts", "*", "user_id = %d", userID)
+        cart_info = conn.selectDB("carts", "*", "user_id = %d", user_id)
 
         if cart_info is None or len(cart_info) == 0:
             return {}

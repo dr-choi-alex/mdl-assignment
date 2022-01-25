@@ -34,7 +34,7 @@ class DBConnection:
 		
 
 	def insertDB(self, table, colum, param, *args, cursor_factory=DictCursor):
-		sql = " INSERT INTO {table}({colum}) VALUES ('{param}') ;".format(table=table,colum=colum,data=param)
+		sql = " INSERT INTO {table}({colum}) VALUES ({param}) ;".format(table=table,colum=colum,param=param)
 		
 		try:
 			cursor= self.connection.cursor(cursor_factory=cursor_factory)
