@@ -56,7 +56,6 @@ async def products_get(
     sqlString = "SELECT * FROM products"
     cursor.execute(sqlString)
     rows = cursor.fetchall()
-    
     return rows
 
 

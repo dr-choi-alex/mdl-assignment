@@ -1,3 +1,4 @@
+import { InternalNgModuleRef } from '@angular/core/src/linker/ng_module_factory';
 import { DropdownItem } from './universal.interface';
 
 export interface CarouselInfo {
@@ -31,23 +32,18 @@ export interface ProductInfo {
   salePrice?: string;
   options?: DropdownItem[];
   inStock: boolean;
+  price: string;
 }
 
-export interface ProductInfo {
+export interface CartProductInfo {
   id: string;
   name: string;
+  img_addr: string;
   description: string;
-  price : string;
-  image: string;
-  // detail: string;
-  // category: string;
-  // gallery?: string[];
-  // onSale: boolean;
-  // costPrice: string;
-  // salePrice?: string;
-  // options?: DropdownItem[];
-  // inStock: boolean;
+  price: string;
+  created_at: string;
 }
+
 
 export interface UserInfo {
   userid: string;
@@ -63,6 +59,12 @@ export interface CategoryInfo {
 }
 
 export interface ShoppingCartItem {
+  product: ProductInfo;
+  quantity: number;
+  option: DropdownItem;
+}
+
+export interface ShoppingCartItemList {
   product: ProductInfo;
   quantity: number;
   option: DropdownItem;

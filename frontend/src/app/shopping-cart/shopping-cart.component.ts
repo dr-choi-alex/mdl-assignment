@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { ShoppingCartItem, OrderInfo } from '../interface/ec-template.interface';
+import { ShoppingCartItem, CartProductInfo } from '../interface/ec-template.interface';
 import { AuthService } from '../services/auth.service';
 import { ApiService } from '../services/api.service';
 
@@ -11,6 +11,7 @@ import { ApiService } from '../services/api.service';
 })
 export class ShoppingCartComponent implements OnInit {
   data: ShoppingCartItem[] = [];
+  productList: CartProductInfo[];
   // order summary
   subTotal = 0;
   tax = 0;
@@ -23,7 +24,7 @@ export class ShoppingCartComponent implements OnInit {
     ) {}
 
   ngOnInit() {
-    this.data = this.dataService.shoppingCartData;
+    // this.data = this.dataService.shoppingCartData;
     this.getOrderSummary();
   }
 
@@ -45,6 +46,7 @@ export class ShoppingCartComponent implements OnInit {
       return item.quantity * +item.product.costPrice;
     }
   }
+  
 
   getOrderSummary() {
     this.subTotal = 0;
@@ -53,7 +55,11 @@ export class ShoppingCartComponent implements OnInit {
     console.log(b)
     
     this._api.postTypeRequest('shopping-cart', b).subscribe((res: any) => {
-      console.log(res)
+      console.log(res.product_info)
+      console.log(res.cart_info)
+      this.productList = res.product_info
+      this.data = res.product_info
+
      
     }, err => {
       console.log(err)

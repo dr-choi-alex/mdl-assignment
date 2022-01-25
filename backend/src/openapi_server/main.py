@@ -11,6 +11,7 @@
 
 
 from cmath import log
+from ntpath import join
 from time import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -82,6 +83,7 @@ class User(BaseModel):
     password: str
     
 class UserID(BaseModel):
+    id: str
     userID: str
     usertype: str
     
@@ -144,30 +146,36 @@ def register(user : Register):
 
 @app.post('/shopping-cart')
 def shoppingCart(user:UserID):
+    from psycopg2.extras import RealDictCursor
+    cursor = db.cursor(cursor_factory=RealDictCursor)
     product_array =[]
-    userID = user.userID
-    
-    sqlString = "SELECT * FROM users where login_id = %s"
-    cursor.execute(sqlString, (userID,))
-    user_info =cursor.fetchall()
-    db.commit()
-    
-    user_id = user_info[0][0]
+    id = user.id
     
     sqlCarts = "SELECT * FROM carts where user_id = %s"
-    cursor.execute(sqlCarts, (user_id,))
-    cart_info =cursor.fetchall()
+  
+    cursor.execute(sqlCarts, ( id ,))
+    cart_info = cursor.fetchall()
     db.commit()
     print(cart_info)
-    
+
+    cond = ''
+    arr =[]
     for i in cart_info:
-        sqlProduct = "SELECT * FROM products where id = %s"
-        cursor.execute(sqlProduct, (i[2],))
-        product_info = cursor.fetchall()
-        product_array.append(product_info)
+        print(i.get('product_id'))
+        cond = "{a} {b}, ".format(a=cond, b=i.get('product_id'))
+        #arr.append(i.get('product_id'))
+        
+    print(cond)
+    
+    sqlProduct = "SELECT * FROM products where id in ({cond})".format(cond=cond[:-2])
+    
+    cursor.execute(sqlProduct)
+    #cursor.execute(sqlProduct, (tuple(arr),))
+    product_info = cursor.fetchall()
+    db.commit()
         
     
-    return product_array
+    return { "product_info": product_info, "cart_info" :cart_info }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
