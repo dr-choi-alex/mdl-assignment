@@ -10,9 +10,11 @@
 """
 
 
+import uvicorn
 from time import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import JSONResponse
 
 from apis.products_api import router as ProductsApiRouter
 from apis.sign_api import router as SignApiRouter
@@ -21,6 +23,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import psycopg2
 import datetime
+from db.database import get_db_pool, get_db_conn
+
 
 # Postgresql 연동
 #db = psycopg2.connect(host='localhost', dbname='postgres',user='postgres',password='1234',port=5432)
@@ -72,59 +76,63 @@ app.include_router(ProductsApiRouter)
 app.include_router(SignApiRouter)
 app.include_router(UsersApiRouter)
 
+get_db_pool().init_app(app, DB_USER="testuser"
+                            , DB_PW="1234"
+                            , DB_HOST = "10.99.80.67"
+                            , DB_PORT = "5432"
+                            , DB_NAME = "mdl")
 
-# # 준석 sample code
-# class User(BaseModel):
-#     userID: str
-#     password: str
+# 준석 sample code
+class User(BaseModel):
+    userID: str
+    password: str
     
-# class Register(BaseModel):
-#     usertype : str
-#     username: str
-#     userID : str
-#     password : str
-#     email : str
+class Register(BaseModel):
+    usertype : str
+    username: str
+    userID : str
+    password : str
+    email : str
 
-# @app.post('/login')
-# def login(user: User):
-#     userID = user.userID
-#     password = user.password
+@app.post('/login')
+def login(user: User):
+    userID = user.userID
+    password = user.password
     
-#     print(readDB(table="users",colum="login_id, password", query="where login_id = {userID} and password = {password}"))
-    
-#     # 아이디를 찾았을 때
-#     usertype = "seller"    
-    
-    
-#     # 아이디 찾기에 실패했을 때
-       
-#     return {
-#         "userID" : userID,
-#         "usertype" : usertype
-#     }
+    with get_db_conn() as conn:
+        result = conn.selectDB("users", "id, email, full_name, type", "where login_id = %s and password = %s", (userID, password))
 
-# @app.post('/register')
-# def register(user : Register):
-#     usertype = user.usertype
-#     username = user.username
-#     userID = user.userID
-#     password = user.password
-#     email = user.email
-#     return_value = ""
-    
-#     try :
-#         sqlString = "INSERT INTO users (login_id, password, email, full_name, type) VALUES (%s, %s, %s, %s, %s);"
+        # 아이디 찾기에 실패했을 때
+        if len(result) == 0:
+            return JSONResponse(status_code=400, content="login fail")
+        
+        # 아이디를 찾았을 때
+        usertype = "customer"
+        if result[0][3] == 1:
+            usertype = "seller"    
+        
+        return {
+            "userID" : userID,
+            "usertype" : usertype
+        }
 
-#         cursor.execute(sqlString, (userID, password, email, username, usertype) )
-#         db.commit()
-#         print("register Successful.")
-#         return_value = "Success"
+
+@app.post('/register')
+def register(user : Register):
+    usertype = user.usertype
+    username = user.username
+    userID = user.userID
+    password = user.password
+    email = user.email
+    return_value = ""
     
-#     except Exception as e :
-#         print(" insert DB  ",e)
-#         return_value = "Fail"
-#         db.commit()
-    
-#     # insertDB(table="users",colum="login_id, password, email, full_name, type", data=f"{userID},{password},{email},{username},0")
-    
-#     return return_value
+    with get_db_conn() as conn:
+        result = conn.insertDB("users", "login_id, password, email, full_name, type", "%s, %s, %s, %s, %s", (userID, password, email, username, usertype))
+        if result:
+            return JSONResponse(status_code=200, content="Success")
+        else:
+            return JSONResponse(status_code=400, content="Success")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

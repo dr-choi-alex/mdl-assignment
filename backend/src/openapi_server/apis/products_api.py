@@ -21,6 +21,8 @@ from models.inline_object import InlineObject
 from models.product import Product
 from pydantic import BaseModel
 
+from db.database import get_db_conn
+
 
 router = APIRouter()
 
@@ -44,22 +46,11 @@ async def products_get(
 #     """Get Products Information"""
 #     ...
 ) :
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
 
-    connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
+    with get_db_conn() as conn:
+        result = conn.selectDB("products", "*")
     
-    # Create a cursor to perform database operations
-    cursor = connection.cursor(cursor_factory=RealDictCursor)
-    
-    # read DB
-    sqlString = "SELECT * FROM products"
-    cursor.execute(sqlString)
-    rows = cursor.fetchall()
-    
-    return rows
-
-
+    return result
 
 @router.post(
     "/products",
