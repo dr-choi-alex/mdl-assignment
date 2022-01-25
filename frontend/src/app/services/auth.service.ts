@@ -40,7 +40,7 @@ export class AuthService {
   getUser(): any {
     const userID = window.sessionStorage.getItem(USER_INFO_KEY);
     if (userID) {
-      console.log(userID)
+      //console.log(userID)
       return JSON.parse(userID);
     }
 

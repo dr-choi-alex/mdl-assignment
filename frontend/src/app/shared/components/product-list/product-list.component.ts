@@ -34,9 +34,8 @@ export class ProductListComponent implements OnInit, OnChanges {
   }
 
   onClick(){
-    console.log("hi")
     this.itemsPerPage = this.itemsPerPage + 1;
-    console.log(this.itemsPerPage)
+    //console.log(this.itemsPerPage)
     const count = this.itemsPerPage
     this.returnedArray = this.productArray.slice(0, count)
   }
