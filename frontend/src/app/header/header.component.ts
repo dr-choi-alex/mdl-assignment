@@ -12,6 +12,7 @@ export class HeaderComponent implements OnInit {
   menuList: MenuInfo[] = [];
   checkStatus : boolean;
   UserIDValue :string;
+  userType : string;
   
   constructor(
     public dataService: DataService,
@@ -33,6 +34,16 @@ export class HeaderComponent implements OnInit {
     if(this.authService.getUser().userID != undefined ){
       console.log(this.authService.getUser().userID)
       console.log("true");
+      
+      if(this.authService.getUser().usertype == "seller"){
+        this.authService.usertype = "seller";
+      }
+
+      else if(this.authService.getUser().usertype == "buyer"){
+        this.authService.usertype = "buyer";
+      }
+
+
       this.UserIDValue = this.authService.getUser().userID
       return true
     }

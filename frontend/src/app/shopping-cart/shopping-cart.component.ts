@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { ShoppingCartItem, OrderInfo } from '../interface/ec-template.interface';
+import { AuthService } from '../services/auth.service';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -11,12 +13,14 @@ export class ShoppingCartComponent implements OnInit {
   data: ShoppingCartItem[] = [];
   // order summary
   subTotal = 0;
-  shippingFee = 50;
-  taxPercentage = 5; // 5%
   tax = 0;
   total = 0;
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private authService: AuthService,
+    private _api: ApiService
+    ) {}
 
   ngOnInit() {
     this.data = this.dataService.shoppingCartData;
@@ -44,6 +48,18 @@ export class ShoppingCartComponent implements OnInit {
 
   getOrderSummary() {
     this.subTotal = 0;
+
+    let b = this.authService.getUser();
+    console.log(b)
+    
+    this._api.postTypeRequest('shopping-cart', b).subscribe((res: any) => {
+      console.log(res)
+     
+    }, err => {
+      console.log(err)
+    });
+
+
     for (const i of this.data) {
       if (i.product.onSale) {
         this.subTotal = this.subTotal + +i.product.salePrice * i.quantity;
@@ -51,14 +67,10 @@ export class ShoppingCartComponent implements OnInit {
         this.subTotal = this.subTotal + +i.product.costPrice * i.quantity;
       }
     }
-    this.tax = (this.subTotal * this.taxPercentage) / 100;
-    this.total = this.subTotal + this.shippingFee + this.tax;
+    this.total = this.subTotal;
   }
 
   onCheckOut() {
-    this.dataService.saveOrderInfo(<OrderInfo>{
-      items: this.data,
-      totalPrice: this.total
-    });
+    alert("결제가 완료되었습니다.");
   }
 }

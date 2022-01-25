@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from '../services/api.service'
-import { DataService } from '../services/data.service';
-import { UserInfo } from '../interface/ec-template.interface';
 
 @Component({
   selector: 'app-log-in',
@@ -18,9 +15,7 @@ export class LogInComponent implements OnInit {
     private authService : AuthService,
     private formBuilder: FormBuilder,
     private _api : ApiService,
-    private _auth: AuthService,
-    private router: Router,
-    private dataService: DataService
+
 
   ) { }
 
@@ -31,8 +26,6 @@ export class LogInComponent implements OnInit {
     });
  
   }
-
-  get f() {return this.loginForm.value}
 
   onSubmit() {
     // Backend로 데이터를 주고 받는 부분
