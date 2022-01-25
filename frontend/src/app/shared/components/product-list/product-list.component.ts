@@ -11,7 +11,7 @@ export class ProductListComponent implements OnInit, OnChanges {
   @Input()
   data: ProductInfo[] = [];
   @Input()
-  itemsPerPage = 12;
+  itemsPerPage = 4;
 
   productArray: ProductInfo[];
   returnedArray: ProductInfo[] = [];

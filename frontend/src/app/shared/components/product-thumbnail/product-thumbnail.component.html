@@ -1,13 +1,13 @@
 <a (click)="directTo()" class="thumbnail">
-    <img [defaultImage]="defaultImage" [lazyLoad]="data.img" [offset]="0">
+    <img [defaultImage]="defaultImage" [lazyLoad]="data.img_addr" [offset]="0" style="height: 250px; width:250px" >
     <div class="caption">
         <h2>{{data.name}}</h2>
         <p *ngIf="data.onSale" class="price">
-            <del>${{data.costPrice}}</del>
+            <del>${{data.price}}</del>
             <span class="sale">${{data.salePrice}}</span>
         </p>
         <p *ngIf="!data.onSale" class="price">
-            <span>${{data.costPrice}}</span>
+            <span>₩{{data.price}}</span>
             <del style="visibility: hidden">not on sale</del>
         </p>
     </div>

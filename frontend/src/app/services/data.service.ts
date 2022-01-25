@@ -47,12 +47,12 @@ export class DataService {
   private initData() {
     this.loadShoppingCart();
     forkJoin(this.getAllProductList(), this.getCategoryList()).subscribe((data: any) => {
-      this.productList$.next(data[0]);
-      console.log('products:', this.productList$.value);
-      this.categoryList$.next(data[1]);
-      console.log('categories:', this.categoryList$.value);
-      this.setCategoryCount();
-      this.getProductListByCategory();
+      // this.productList$.next(data[0]);
+      // console.log('products:', this.productList$.value);
+      // this.categoryList$.next(data[1]);
+      // console.log('categories:', this.categoryList$.value);
+      // this.setCategoryCount();
+      // this.getProductListByCategory();
     });
   }
 

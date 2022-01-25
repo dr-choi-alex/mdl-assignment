@@ -33,6 +33,21 @@ export interface ProductInfo {
   inStock: boolean;
 }
 
+export interface ProductInfo {
+  id: string;
+  name: string;
+  description: string;
+  detail: string;
+  category: string;
+  image: string;
+  gallery?: string[];
+  onSale: boolean;
+  costPrice: string;
+  salePrice?: string;
+  options?: DropdownItem[];
+  inStock: boolean;
+}
+
 export interface UserInfo {
   userid: string;
   password: string;
