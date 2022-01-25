@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class HeaderComponent implements OnInit {
   menuList: MenuInfo[] = [];
   checkStatus : boolean;
+  isSeller : boolean = false;
   UserIDValue :string;
   userType : string;
   
@@ -32,15 +33,17 @@ export class HeaderComponent implements OnInit {
 
   getUserID() :boolean {
     if(this.authService.getUser().userID != undefined ){
-      console.log(this.authService.getUser().userID)
+      console.log(this.authService.getUser())
       console.log("true");
       
       if(this.authService.getUser().usertype == "seller"){
         this.authService.usertype = "seller";
+        this.isSeller = true;
       }
 
       else if(this.authService.getUser().usertype == "buyer"){
         this.authService.usertype = "buyer";
+        this.isSeller = false;
       }
 
 

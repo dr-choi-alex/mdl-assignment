@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ProductInfo } from 'src/app/interface/ec-template.interface';
 import { Router } from '@angular/router';
+import { ApiService } from '../../../services/api.service'
+import { AuthService } from '../../../services/auth.service';
 
 
 @Component({
@@ -18,7 +20,7 @@ export class ProductThumbnailComponent implements OnInit {
 
   defaultImage = './assets/images/default-image.png';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private _api : ApiService, private authService : AuthService,) {}
 
   ngOnInit() {}
 
@@ -28,7 +30,34 @@ export class ProductThumbnailComponent implements OnInit {
   }
 
   addCart() {
-    console.log("check")
-    console.log(this.data)
+    // console.log("=====================check=====================")
+    // console.log("product Info")
+    // console.log(this.data)
+
+    const userLoginID = this.authService.getUser().userID;
+    const userID = this.authService.getUser().id;
+    const ProductID = this.data.id
+    const body = {userID : userID, productID : ProductID}
+
+    const url = 'users/' + userLoginID + "/Carts" 
+
+    // console.log("User Info")
+    // console.log(this.authService.getUser())
+    // console.log("productID : " + userID + "  / userID : " + ProductID)
+
+    // console.log(body)
+
+    //=========================[ 확인 ]======================
+    //post임 수정해야함, API 수정 후 다시 skeleton 만들어서 하기
+    //=======================================================
+    this._api.putTypeRequest(url, body).subscribe((res: any) => {
+      console.log(res)
+
+      alert(res)
+
+    }, err => {
+      console.log(err)
+    });
+
   }
 }

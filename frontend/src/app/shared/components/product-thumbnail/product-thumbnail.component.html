@@ -2,10 +2,12 @@
     <img [defaultImage]="defaultImage" [lazyLoad]="data.img_addr" [offset]="0" style="height: 250px; width:250px" (click)="detailInfoOn()" >
     <div class="caption">
         <h2>{{data.name}}</h2>
+            <!--
             <p *ngIf="data.onSale" class="price" style="float:left">
                 <del>${{data.price}}</del>
                 <span class="sale">${{data.salePrice}}</span>
             </p>
+            -->
             <p *ngIf="!data.onSale" class="price" style="float:left">
                 <span>₩{{data.price}}</span>
                 <del style="visibility: hidden">not on sale</del>

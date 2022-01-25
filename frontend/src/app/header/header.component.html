@@ -14,10 +14,10 @@
                 <!-- Log In -->
                 <li><a *ngIf="checkStatus==false" [routerLink]="'./log-in'" class="login"> Log In </a></li>
                 <!-- Add Product -->
-                <li><a [routerLink]="'./product'" class="product"> Product </a></li>
+                <li><a *ngIf="isSeller==true" [routerLink]="'./product'" class="product"  > Product </a></li>
                 <!--<li><a *ngIf="usertype==seller && checkStatus==true" [routerLink]="'./product'" class="product"> Product </a></li>-->
                 <!-- Shopping Cart -->
-                <li><a [routerLink]="'./shopping-cart'" class="cart">Shopping Cart<span class="badge my-badge">{{dataService.shoppingCartData.length}}</span></a></li>
+                <li><a *ngIf="checkStatus==true" [routerLink]="'./shopping-cart'" class="cart">Shopping Cart<span class="badge my-badge">{{dataService.shoppingCartData.length}}</span></a></li>
                 <!--<li><a *ngIf="checkStatus==true" [routerLink]="'./shopping-cart'" class="cart">Shopping Cart<span class="badge my-badge">{{dataService.shoppingCartData.length}}</span></a></li>-->
                 <!-- Log out -->
                 <li><a *ngIf="checkStatus==true" (click)="logout()" [routerLink]="'./'" class="logout">Log out</a></li>
