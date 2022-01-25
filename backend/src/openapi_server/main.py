@@ -113,7 +113,7 @@ def login(user: User):
 
         # 아이디 찾기에 실패했을 때
         if len(result) == 0:
-            return JSONResponse(status_code=400, content="fail")
+            return JSONResponse(status_code=400, content=dict(msg="fail"))
         
         # 아이디를 찾았을 때
         usertype = "buyer"
@@ -139,9 +139,9 @@ def register(user : Register):
     with get_db_conn() as conn:
         result = conn.insertDB("users", "login_id, password, email, full_name, type", "%s, %s, %s, %s, %s", userID, password, email, username, usertype)
         if result:
-            return JSONResponse(status_code=200, content="Success")
+            return JSONResponse(status_code=200, content=dict(msg="Success"))
         else:
-            return JSONResponse(status_code=400, content="Fail")
+            return JSONResponse(status_code=400, content=dict(msg="fail"))
 
 @app.post('/shopping-cart')
 def shoppingCart(user:UserID):
