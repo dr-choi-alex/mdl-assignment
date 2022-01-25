@@ -22,9 +22,8 @@ export class ProductThumbnailComponent implements OnInit {
 
   ngOnInit() {}
 
-  modalOn() {
-    console.log("hi")
-    console.log(this.data)
+  detailInfoOn() {
+    alert(" name : " + this.data.name + "\n price : " + this.data.price + "\n description : " + this.data.description)
     //this.router.navigate([`/category/product/${this.data.id}`]);
   }
 
