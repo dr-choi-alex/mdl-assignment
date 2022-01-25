@@ -20,6 +20,8 @@ from models.extra_models import TokenModel  # noqa: F401
 from models.inline_object import InlineObject
 from models.product import Product
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
+from db.database import get_db_conn
 
 
 router = APIRouter()
@@ -44,20 +46,10 @@ async def products_get(
 #     """Get Products Information"""
 #     ...
 ) :
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
 
-    connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
-    
-    # Create a cursor to perform database operations
-    cursor = connection.cursor(cursor_factory=RealDictCursor)
-    
-    # read DB
-    sqlString = "SELECT * FROM products"
-    cursor.execute(sqlString)
-    rows = cursor.fetchall()
-    return rows
-
+    with get_db_conn() as conn:
+        result = conn.selectDB("products", "*")
+    return result
 
 
 @router.post(
@@ -77,17 +69,10 @@ async def products_post(
 ) : 
     
 
-
-    import psycopg2
-
-    connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
+    with get_db_conn() as conn:
+        result = conn.insertDB("products", "name, img_addr, description, price", "%s, %s, %s, %s", product.name, product.image, product.description, product.price)
     
-    # Create a cursor to perform database operations
-    cursor = connection.cursor()
-    
-    # write DB
-    sqlString = "INSERT INTO products (name, img_addr, description, price) VALUES (%s, %s, %s, %s);"
-    cursor.execute(sqlString, (product.name, product.image, product.description, product.price) )
-    connection.commit()
-    
-    return {"name" : product.name, "image" : product.image, "price" : product.price, "description" : product.description}
+    if result:
+        return {"name" : product.name, "image" : product.image, "price" : product.price, "description" : product.description}
+    else:
+        return JSONResponse(status_code=400, content="fail")

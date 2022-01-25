@@ -10,13 +10,14 @@
 """
 
 
+import uvicorn
 from cmath import log
 from ntpath import join
 from time import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import JSONResponse
 from numpy import array
-import uvicorn
 
 from apis.products_api import router as ProductsApiRouter
 from apis.sign_api import router as SignApiRouter
@@ -25,6 +26,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import psycopg2
 import datetime
+from db.database import get_db_pool, get_db_conn
+
 
 ##Postgresql 연동
 #db = psycopg2.connect(host='localhost', dbname='postgres',user='postgres',password='1234',port=5432)
@@ -76,6 +79,11 @@ app.include_router(ProductsApiRouter)
 app.include_router(SignApiRouter)
 app.include_router(UsersApiRouter)
 
+get_db_pool().init_app(app, DB_USER="testuser"
+                            , DB_PW="1234"
+                            , DB_HOST = "10.99.80.67"
+                            , DB_PORT = "5432"
+                            , DB_NAME = "mdl")
 
 # 준석 sample code
 class User(BaseModel):
@@ -100,23 +108,23 @@ def login(user: User):
     password = user.password
     usertype = ""
     
-    sqlLogin = "SELECT * FROM users WHERE login_id=%s and password=%s"
-    cursor.execute(sqlLogin, (userID, password) )
-    db.commit()
-    login_info = cursor.fetchall();
-    
-    if login_info[0][5] == 0 :
-        usertype = "seller"    
-    elif login_info[0][5] == 1 :
+    with get_db_conn() as conn:
+        result = conn.selectDB("users", "id, email, full_name, type", "where login_id = %s and password = %s", userID, password)
+
+        # 아이디 찾기에 실패했을 때
+        if len(result) == 0:
+            return JSONResponse(status_code=400, content="fail")
+        
+        # 아이디를 찾았을 때
         usertype = "buyer"
-    else :
-        usertype = "error"
-       
-    return {
-        "id" : login_info[0][0],
-        "userID" : userID,
-        "usertype" : usertype
-    }
+        if result[0].get("type") == 1:
+            usertype = "seller"    
+        
+        return {
+            "id" : result[0].get("id"),
+            "userID" : userID,
+            "usertype" : usertype
+        }
 
 @app.post('/register')
 def register(user : Register):
@@ -127,55 +135,40 @@ def register(user : Register):
     email = user.email
     return_value = ""
     
-    try :
-        sqlString = "INSERT INTO users (login_id, password, email, full_name, type) VALUES (%s, %s, %s, %s, %s);"
-
-        cursor.execute(sqlString, (userID, password, email, username, usertype) )
-        db.commit()
-        print("register Successful.")
-        return_value = "Success"
     
-    except Exception as e :
-        print(" insert DB  ",e)
-        return_value = "Fail"
-        db.commit()
-    
-    # insertDB(table="users",colum="login_id, password, email, full_name, type", data=f"{userID},{password},{email},{username},0")
-    
-    return return_value
+    with get_db_conn() as conn:
+        result = conn.insertDB("users", "login_id, password, email, full_name, type", "%s, %s, %s, %s, %s", userID, password, email, username, usertype)
+        if result:
+            return JSONResponse(status_code=200, content="Success")
+        else:
+            return JSONResponse(status_code=400, content="Fail")
 
 @app.post('/shopping-cart')
 def shoppingCart(user:UserID):
     from psycopg2.extras import RealDictCursor
     cursor = db.cursor(cursor_factory=RealDictCursor)
     product_array =[]
-    id = user.id
-    
-    sqlCarts = "SELECT * FROM carts where user_id = %s"
-  
-    cursor.execute(sqlCarts, ( id ,))
-    cart_info = cursor.fetchall()
-    db.commit()
-    print(cart_info)
 
-    cond = ''
-    arr =[]
-    for i in cart_info:
-        print(i.get('product_id'))
-        cond = "{a} {b}, ".format(a=cond, b=i.get('product_id'))
-        #arr.append(i.get('product_id'))
-        
-    print(cond)
+    userID = user.userID
+
+    with get_db_conn() as conn:
+        result = conn.selectDB("users", "id", "where login_id = %s", userID )
+
+        user_id = result[0].get("id")
+
+        cart_info = conn.selectDB("carts", "*", "user_id = %d", userID)
+
+        if cart_info is None or len(cart_info) == 0:
+            return {}
+
+        cond = ''
+        for info in cart_info:
+            cond = "{a} {b},".format(a=cond, b=info.get("product_id"))
+
+        product_info = conn.selectDB("products", "*", "where id in ({cond})".format(cond=cond[:-2]) )
+       
+        return { "product_info": product_info, "cart_info" :cart_info }
     
-    sqlProduct = "SELECT * FROM products where id in ({cond})".format(cond=cond[:-2])
-    
-    cursor.execute(sqlProduct)
-    #cursor.execute(sqlProduct, (tuple(arr),))
-    product_info = cursor.fetchall()
-    db.commit()
-        
-    
-    return { "product_info": product_info, "cart_info" :cart_info }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
