@@ -11,6 +11,7 @@ const USER_INFO_KEY = 'user-info'
 export class AuthService {
 
   isloggedin = false;
+  usertype : string;
 
   private setSessionStorage(key: string, value: any) {
     sessionStorage.setItem(key, JSON.stringify(value));

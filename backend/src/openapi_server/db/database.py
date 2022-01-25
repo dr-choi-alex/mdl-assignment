@@ -21,9 +21,9 @@ class DBConnection:
 	def get_connection(self):
 		return self.connection
 
-	def execute(self,query,args={}):
+	def execute(self,query,*args, cursor_factory=RealDictCursor):
 		try:
-			cursor= self.connection.cursor()
+			cursor= self.connection.cursor(cursor_factory=cursor_factory)
 			cursor.execute(query,args)
 			row = cursor.fetchall()
 			return row
@@ -33,11 +33,11 @@ class DBConnection:
 			cursor.close()
 		
 
-	def insertDB(self, table, colum, param, curser_type=DictCursor, args={}):
+	def insertDB(self, table, colum, param, *args, cursor_factory=DictCursor):
 		sql = " INSERT INTO {table}({colum}) VALUES ('{param}') ;".format(table=table,colum=colum,data=param)
 		
 		try:
-			cursor= self.connection.cursor()
+			cursor= self.connection.cursor(cursor_factory=cursor_factory)
 			cursor.execute(sql, args)
 			self.connection.commit()
 			return True
@@ -47,11 +47,11 @@ class DBConnection:
 		finally:
 			cursor.close()
 
-	def selectDB(self, table,colum, query = None, curser_type=RealDictCursor, args={}):
+	def selectDB(self, table,colum, query = None, *args, cursor_factory=RealDictCursor):
 		query = query or ''
 		sql = " SELECT {colum} from {table} {query}".format(colum=colum,table=table, query=query)
 		try:
-			cursor= self.connection.cursor(curser_type)
+			cursor= self.connection.cursor(cursor_factory=cursor_factory)
 			cursor.execute(sql,args)
 			row = cursor.fetchall()
 			return row

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from '../services/api.service'
 
 @Component({
@@ -14,8 +12,6 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private _api : ApiService,
-    private _auth: AuthService,
-    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -34,8 +30,8 @@ export class RegisterComponent implements OnInit {
       console.log(res)
       if(res.value == "Success")
       {
+        history.back();
         alert(`Register ${res}.`)
-        
       }
       else 
       {

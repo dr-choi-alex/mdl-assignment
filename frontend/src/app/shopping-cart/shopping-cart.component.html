@@ -37,8 +37,8 @@
             </li>
         </ul>
 
-        <a class="btn btn-continue pull-right" [routerLink]="'../category/all'">
-            Continue Shopping <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+        <a class="btn btn-continue pull-right">
+            Update DB <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
         </a>
     </div>
     <!-- Order Summary -->
@@ -53,20 +53,13 @@
                         <span class="pull-left">Subtotal</span>
                         <span class="pull-right">${{subTotal}}</span>
                     </div>
-                    <div class="price-info">
-                        <span class="pull-left">Shipping</span>
-                        <span class="pull-right">${{shippingFee}}</span>
-                    </div>
-                    <div class="price-info">
-                        <span class="pull-left">Tax({{taxPercentage}}%)</span>
-                        <span class="pull-right">${{tax}}</span>
-                    </div>
+                  
                     <hr>
                     <div class="price-info total">
                         <span class="pull-left">Total</span>
                         <span class="pull-right">${{total}}</span>
                     </div>
-                    <a class="btn btn-success btn-check-out" [routerLink]="['/payment']" (click)="onCheckOut()">CHECK OUT</a>
+                    <a class="btn btn-success btn-check-out" [routerLink]="['../']" (click)="onCheckOut()">CHECK OUT</a>
                 </div>
             </div>
         </section>

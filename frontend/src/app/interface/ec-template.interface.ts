@@ -37,15 +37,16 @@ export interface ProductInfo {
   id: string;
   name: string;
   description: string;
-  detail: string;
-  category: string;
+  price : string;
   image: string;
-  gallery?: string[];
-  onSale: boolean;
-  costPrice: string;
-  salePrice?: string;
-  options?: DropdownItem[];
-  inStock: boolean;
+  // detail: string;
+  // category: string;
+  // gallery?: string[];
+  // onSale: boolean;
+  // costPrice: string;
+  // salePrice?: string;
+  // options?: DropdownItem[];
+  // inStock: boolean;
 }
 
 export interface UserInfo {
