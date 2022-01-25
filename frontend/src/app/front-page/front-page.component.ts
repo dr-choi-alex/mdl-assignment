@@ -15,8 +15,6 @@ export class FrontPageComponent implements OnInit {
   ngOnInit() {
     this.dataService.productList$.subscribe(data => {
       this.productList = data;
-      console.log("this is")
-      console.log(data)
     });
 
     this._api.getTypeRequest('products').subscribe((res: any) => {

@@ -3,10 +3,14 @@
         <div *ngFor="let product of returnedArray" class="col-xs-6 col-sm-3">
             <app-product-thumbnail [data]="product"></app-product-thumbnail>
         </div>
+        
     </div>
-
+    
+    
 </div>
-<!-- Pagination -->
+<button class="btn btn-lg btn-primary col-md-offset-5" (click)="onClick()">view more</button>
+
+<!-- Pagination 
 <div class="row">
     <div class="col-xs-12 col-sm-12 text-center">
         <pagination
@@ -22,3 +26,4 @@
             [rotate]="false"></pagination>
     </div>
 </div>
+-->

@@ -32,4 +32,12 @@ export class ProductListComponent implements OnInit, OnChanges {
     const endItem = event.page * event.itemsPerPage;
     this.returnedArray = this.productArray.slice(startItem, endItem);
   }
+
+  onClick(){
+    console.log("hi")
+    this.itemsPerPage = this.itemsPerPage + 1;
+    console.log(this.itemsPerPage)
+    const count = this.itemsPerPage
+    this.returnedArray = this.productArray.slice(0, count)
+  }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ProductInfo } from 'src/app/interface/ec-template.interface';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-product-thumbnail',
   templateUrl: './product-thumbnail.component.html',
@@ -21,7 +22,14 @@ export class ProductThumbnailComponent implements OnInit {
 
   ngOnInit() {}
 
-  directTo() {
-    this.router.navigate([`/category/product/${this.data.id}`]);
+  modalOn() {
+    console.log("hi")
+    console.log(this.data)
+    //this.router.navigate([`/category/product/${this.data.id}`]);
+  }
+
+  addCart() {
+    console.log("check")
+    console.log(this.data)
   }
 }
