@@ -58,7 +58,7 @@ async def users_user_id_carts_get(
     userId: str = Path(None, description="Reads and displays user&#39;s cart information."),
 ) -> List[object]:
     with get_db_conn() as conn:
-        result = conn.selectDB("carts", "*","where user_id = %d", userId)
+        result = conn.selectDB("carts", "*","user_id = %d", userId)
         if len(result) > 0 and result is not None:
             return result
         else:
@@ -106,7 +106,7 @@ async def users_user_id_carts_put(
     # return {"update DB"}
 
     with get_db_conn() as conn:
-            result = conn.selectDB("carts", "*", "where user_id = %s and product_id = %s", userId, cart.productID)
+            result = conn.selectDB("carts", "*", "user_id = %s and product_id = %s", userId, cart.productID)
 
             print(result)
             
