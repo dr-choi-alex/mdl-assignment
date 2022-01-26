@@ -104,6 +104,7 @@ paths:
       summary: Create User
       tags:
       - users
+
   /users/{userId}:
     description: User information
     get:
@@ -114,7 +115,7 @@ paths:
         name: userId
         required: true
         schema:
-          type: string
+          type: integer
         style: simple
       responses:
         "200":
@@ -126,6 +127,7 @@ paths:
       summary: Get the user detail information
       tags:
       - users
+
   /users/{userId}/Carts:
     description: the user cart information
     get:
@@ -136,19 +138,25 @@ paths:
         name: userId
         required: true
         schema:
-          type: string
+          type: integer
         style: simple
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/carts'
+                properties:
+                  Carts:
+                    $ref: '#/components/schemas/carts'
+                  Products:
+                    $ref: '#/components/schemas/products'
+
           description: Success Resopnse
-      summary: Get the user's cart information
+      summary: Get the user's cart items
       tags:
       - users
-    put:
+
+    post:
       parameters:
       - description: Reads and displays user's cart information.
         explode: false
@@ -156,8 +164,12 @@ paths:
         name: userId
         required: true
         schema:
-          type: string
+          type: integer
         style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/inline_cartitem'
+        description: Add data to DB by sending user information.
+        required: true
       responses:
         "200":
           description: Success Resopnse with path param
@@ -168,9 +180,41 @@ paths:
                 example: Fail to change data.
                 type: string
           description: Fail Resopnse with path param
-      summary: Update the user's cart information
+      summary: add the user's cart item
       tags:
       - users
+
+    delete:
+      parameters:
+      - description: Reads and displays user's cart information.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                ProductID:
+                  type: integer
+      responses:
+        "200":
+          description: Success Resopnse with path param
+        "400":
+          content:
+            application/json:
+              schema:
+                example: Fail to change data.
+                type: string
+          description: Fail Resopnse with path param
+      summary: delete the user's cart item
+      tags:
+      - users
+
   /signin:
     description: Send the user's id and password to find out appropriate DB data.
     post:
@@ -295,31 +339,20 @@ paths:
       summary: Logout User
       tags:
       - sign
+
 components:
   requestBodies:
-    inline_object_1:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/inline_object_1'
-      required: true
     inline_object:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/inline_object'
       required: true
-    inline_object_4:
+    inline_object_1:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/inline_object_4'
-      required: true
-    inline_object_3:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/inline_object_3'
+            $ref: '#/components/schemas/inline_object_1'
       required: true
     inline_object_2:
       content:
@@ -327,6 +360,25 @@ components:
           schema:
             $ref: '#/components/schemas/inline_object_2'
       required: true
+    inline_object_3:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_3'
+      required: true
+    inline_object_4:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_4'
+      required: true
+    inline_cartitem:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_cartitem'
+      required: true
+    
   schemas:
     products:
       example:
@@ -369,15 +421,15 @@ components:
     carts:
       example:
       - ProductID: 3
-        Count: 5
+        Quantity: 5
       - ProductID: 4
-        Count: 10
+        Quantity: 10
       items:
         properties:
           ProductID:
             example: 1
             type: integer
-          Count:
+          Quantity:
             example: 5
             type: integer
         type: object
@@ -476,3 +528,10 @@ components:
           type: string
       title: inline_object_4
       type: object
+    inline_cartitem:
+      properties:
+        ProductID:
+          type: integer
+        Quantity:
+          type: integer
+
