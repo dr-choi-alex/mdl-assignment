@@ -4,8 +4,10 @@ import {
   ProductInfo,
   CategoryInfo,
   ShoppingCartItem,
+  ShoppingCartItemList,
   OrderInfo,
-  UserInfo
+  UserInfo,
+  CartProductInfo
 } from '../interface/ec-template.interface';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
@@ -26,7 +28,7 @@ export class DataService {
   currentProductListByCategory$ = new BehaviorSubject<ProductInfo[]>([]);
 
   shoppingCartData: ShoppingCartItem[] = [];
-
+  CartProductInfo : CartProductInfo[] = [];
   constructor(
     private http: HttpClient,
     private notifierService: NotifierService,
@@ -160,15 +162,18 @@ export class DataService {
     );
   }
 
-  editShoppingCartItem(item: ShoppingCartItem) {
-    this.shoppingCartData = this.shoppingCartData.map((data: ShoppingCartItem) => {
-      if (data.product.id === item.product.id) {
+  editShoppingCartItem(item: CartProductInfo) {
+    this.CartProductInfo = this.CartProductInfo.map((data: CartProductInfo) => {
+      console.log(data.id )
+      console.log(item.id)
+      if (data.id === item.id) {
+
         data = Object.assign({}, data, item);
       }
+      console.log(data)
       return data;
     });
-    console.log('item edited:', this.shoppingCartData);
-    this.setLocalStorage(SHOPPING_CART_KEY, this.shoppingCartData);
+    console.log('item edited:', this.CartProductInfo);
   }
 
   deleteShoppingCartItem(item: ShoppingCartItem) {

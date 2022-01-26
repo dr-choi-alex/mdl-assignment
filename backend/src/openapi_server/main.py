@@ -10,6 +10,8 @@
 """
 
 
+from ast import Num
+import string
 import uvicorn
 from cmath import log
 from ntpath import join
@@ -17,7 +19,7 @@ from time import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
-from numpy import array
+from numpy import array, integer, number
 
 from apis.products_api import router as ProductsApiRouter
 from apis.sign_api import router as SignApiRouter
@@ -102,6 +104,16 @@ class Register(BaseModel):
     password : str
     email : str
 
+    
+class Cart_Product(BaseModel):
+    id: str
+    name: str
+    img_addr: str
+    description: str
+    price: str
+    created_at : str
+    
+
 @app.post('/login')
 def login(user: User):
     userID = user.userID
@@ -170,5 +182,19 @@ def shoppingCart(user:UserID):
         return { "product_info": product_info, "cart_info" :cart_info }
     
 
+@app.post('/removeItem')
+def removeItem(item : Cart_Product):
+    id: item.id
+    name: item.name
+    img_addr: item.imgaddr
+    description: item.description
+    price: item.price
+    created_at : item.created_at
+    
+    print(id)
+    return
+    
+    
+    
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

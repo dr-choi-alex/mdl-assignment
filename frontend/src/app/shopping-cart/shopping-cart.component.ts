@@ -11,7 +11,7 @@ import { ApiService } from '../services/api.service';
 })
 export class ShoppingCartComponent implements OnInit {
   cart_data: ShoppingCartItemList[];
-  data: CartProductInfo[];
+  data: CartProductInfo[] = [];
   // order summary
   subTotal = 0;
   tax = 0;
@@ -28,16 +28,24 @@ export class ShoppingCartComponent implements OnInit {
     this.getOrderSummary();
   }
 
-  // updateItem(item: ShoppingCartItemList) {
-  //   this.dataService.editShoppingCartItem(item);
-  //   this.getOrderSummary();
-  // }
+  updateItem(item: CartProductInfo, index:number, quantity:number) {
+    console.log(this.cart_data[index]);
+    this.getTotalPrice();
+  }
 
-  // removeItem(item: ShoppingCartItemList) {
-  //   this.dataService.deleteShoppingCartItem(item);
-  //   this.data = this.dataService.shoppingCartData;
-  //   this.getOrderSummary();
-  // }
+  removeItem(item: CartProductInfo) {
+    this._api.postTypeRequest('removeItem', item).subscribe((res: any) => {
+      console.log(res)
+    }, err => {
+      console.log(err)
+    });
+    this.getTotalPrice();
+  }
+
+  updateDB(){
+
+  }
+
 
   getProductPrice(item: CartProductInfo , index:number) {
     if (item.price) {
@@ -47,8 +55,20 @@ export class ShoppingCartComponent implements OnInit {
     }
   }
 
-  getTotalPrice(item:CartProductInfo, index:number){
-
+  getTotalPrice(){
+    this.subTotal = 0;
+    
+    for (const item of this.data) {
+      if (item.price) {
+        this.subTotal += this.cart_data[this.index].quantity * +item.price;
+        this.index = this.index +1;
+      } else {
+        this.subTotal += this.cart_data[this.index].quantity * +item.price;
+        this.index = this.index +1;
+      }
+    }
+    this.total = this.subTotal;
+    this.index = 0;
   }
   
 
@@ -62,19 +82,8 @@ export class ShoppingCartComponent implements OnInit {
       console.log(res.cart_info)
       this.data = res.product_info
       this.cart_data = res.cart_info
-
-      this.subTotal = 0;
+      this.getTotalPrice()
     
-      for (const item of this.data) {
-        if (item.price) {
-          this.subTotal += this.cart_data[this.index].quantity * +item.price;
-          this.index = this.index +1;
-        } else {
-          this.subTotal += this.cart_data[this.index].quantity * +item.price;
-          this.index = this.index +1;
-        }
-      }
-      this.total = this.subTotal;
 
       console.log(this.total)
     }, err => {
