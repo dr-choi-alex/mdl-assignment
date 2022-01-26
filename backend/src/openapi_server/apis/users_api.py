@@ -21,6 +21,8 @@ from models.inline_object1 import InlineObject1
 from models.user import User
 from pydantic import BaseModel
 
+from starlette.responses import JSONResponse
+from db.db_pool import get_db_conn
 
 router = APIRouter()
 
@@ -55,7 +57,13 @@ async def users_post(
 async def users_user_id_carts_get(
     userId: str = Path(None, description="Reads and displays user&#39;s cart information."),
 ) -> List[object]:
-    ...
+    with get_db_conn() as conn:
+        result = conn.selectDB("carts", "*","where user_id = %d", userId)
+        if len(result) > 0 and result is not None:
+            return result
+        else:
+            return {}
+            #return JSONResponse(status_code=200, content=dict(msg="empty"))
 
 
 @router.put(
@@ -74,6 +82,8 @@ async def users_user_id_carts_put(
     #=========================[ 확인 ]======================
     #post임 수정해야함, API 수정 후 다시 skeleton 만들어서 하기
     #=======================================================
+
+    # FIXME: API 수정 cart가 배열로, url path로 userId를 받고  cart에 productID, quantity만 있으면 됨. 
     import psycopg2
 
     connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
@@ -107,4 +117,9 @@ async def users_user_id_carts_put(
 async def users_user_id_get(
     userId: str = Path(None, description="The id of the user to retrieve"),
 ) -> User:
-    ...
+    with get_db_conn() as conn:
+        result = conn.selectDB("users", "*", "where id = %d", userId)
+        if len(result) > 0 and result is not None:
+            return result
+        else:
+            return JSONResponse(status_code=400, content=dict(msg="User ID does not exist"))

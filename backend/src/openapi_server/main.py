@@ -26,7 +26,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import psycopg2
 import datetime
-from db.database import get_db_pool, get_db_conn
+from db.db_pool import get_db_pool, get_db_conn
 
 
 ##Postgresql 연동
@@ -145,10 +145,6 @@ def register(user : Register):
 
 @app.post('/shopping-cart')
 def shoppingCart(user:UserID):
-    from psycopg2.extras import RealDictCursor
-    cursor = db.cursor(cursor_factory=RealDictCursor)
-    product_array =[]
-
     userID = user.userID
 
     with get_db_conn() as conn:
