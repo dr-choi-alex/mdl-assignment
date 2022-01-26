@@ -1,15 +1,8 @@
 <div class="container">
     <h1 class="sc-header">Shopping Cart</h1>
     <hr>
-    <!-- Shopping Cart Empty -->
-    <div *ngIf="data.length === 0" class="col-md-12">
-        <h3 class="empty"><i>Your Shopping Cart is Empty</i></h3>
-        <a class="btn btn-continue pull-right" [routerLink]="'../category/all'">
-            Continue Shopping <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
-        </a>
-    </div>
     <!-- Cart Cards -->
-    <div *ngIf="data.length !== 0" class="col-md-8 col-xs-12">
+    <div class="col-md-8 col-xs-12">
         <ul class="cart-wrap">
 
             <li *ngFor="let item of data; let i = index" class="cart-item" [class.even-section]="i%2 == 0">
@@ -17,7 +10,6 @@
                     <!-- Product Info -->
                     <div class="cart-section product-info">
                         <img [src]="item.img_addr">
-                        <p class="item-number">#{{item.id}}</p>
                         <h3 class="item-name">{{item.name}}</h3>
                         <p class="qty">
                             <input type="number" class="qty-input" [(ngModel)]="cart_data[i].quantity" value="quantity" (change)="updateItem(item,i)" >
@@ -41,7 +33,7 @@
         </a>
     </div>
     <!-- Order Summary -->
-    <div *ngIf="data.length !== 0" class="col-md-4 col-xs-12">
+    <div  class="col-md-4 col-xs-12">
         <section class="order-summary">
             <div class="section-header">
                 <h3>Order Summary</h3>

@@ -34,6 +34,7 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   removeItem(item: CartProductInfo) {
+    
     this._api.postTypeRequest('removeItem', item).subscribe((res: any) => {
       console.log(res)
     }, err => {
@@ -57,18 +58,19 @@ export class ShoppingCartComponent implements OnInit {
 
   getTotalPrice(){
     this.subTotal = 0;
-    
-    for (const item of this.data) {
-      if (item.price) {
-        this.subTotal += this.cart_data[this.index].quantity * +item.price;
-        this.index = this.index +1;
-      } else {
-        this.subTotal += this.cart_data[this.index].quantity * +item.price;
-        this.index = this.index +1;
+    if(this.data != undefined){
+      for (const item of this.data) {
+        if (item.price) {
+          this.subTotal += this.cart_data[this.index].quantity * +item.price;
+          this.index = this.index +1;
+        } else {
+          this.subTotal += this.cart_data[this.index].quantity * +item.price;
+          this.index = this.index +1;
+        }
       }
+      this.total = this.subTotal;
+      this.index = 0;
     }
-    this.total = this.subTotal;
-    this.index = 0;
   }
   
 

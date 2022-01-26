@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit {
 
   logout() : void{
     this.authService.logout();
-    window.location.reload();
+    window.location.replace('../');
     this.authService.isloggedin = false;
   }
 }
