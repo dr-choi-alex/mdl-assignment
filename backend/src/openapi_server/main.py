@@ -11,15 +11,14 @@
 
 
 from ast import Num
+from torch import quantile
 import uvicorn
 from cmath import log
 from ntpath import join
 from time import time
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Path
 from starlette.responses import JSONResponse
 
-from numpy import array, integer, number
 
 from apis.products_api import router as ProductsApiRouter
 from apis.sign_api import router as SignApiRouter
@@ -81,12 +80,18 @@ class Register(BaseModel):
 
     
 class Cart_Product(BaseModel):
-    id: str
+    id: int
     name: str
     img_addr: str
     description: str
     price: str
     created_at : str
+    
+class Cart_Product(BaseModel):
+    user_id : int
+    product_id: int
+    quantity: int
+ 
     
 
 @app.post('/login')
@@ -154,6 +159,41 @@ def shoppingCart(user:UserID):
         product_info = conn.selectDB("products", "*", "id in ({cond})".format(cond=cond[:-1]) )
        
         return { "product_info": product_info, "cart_info" :cart_info }
+
+
+@app.post('/removeItem/{user_id}')
+def removeItem(product_id :int):
+    
+    product_id = product_id
+    #user_id: str = Path(None);
+    
+    with get_db_conn() as conn:
+        result = conn.deleteDB ("carts", "user_id=%s and product_id=%s", 2,product_id )
+    
+    print(2, id) 
+    return {"user_id" : 2, "id":product_id }
+    
+
+@app.post('/updateItem/{user_id}')
+def updateItem(item :Cart_Product):
+    user_id = item.user_id
+    product_id = item.product_id
+    quantity = item.quantity
+
+    with get_db_conn() as conn:
+        result = conn.updateDB("carts", "quantity=%s", "user_id=%s and product_id=%s",quantity, user_id, product_id)
+    
+    print(quantity, user_id, product_id)
+    return {"quantity" : quantity, "user_id" : user_id, "product_id" : product_id}
+    
+@app.post('/checkout')
+def checkout(user_id: int):
+    user_id = user_id
+    with get_db_conn() as conn:
+        result = conn.deleteDB ("carts", "user_id=%s", user_id )
+    
+    print(user_id)
+    return "Checkout"
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

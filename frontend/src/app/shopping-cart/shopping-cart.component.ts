@@ -28,19 +28,27 @@ export class ShoppingCartComponent implements OnInit {
     this.getOrderSummary();
   }
 
-  updateItem(item: CartProductInfo, index:number, quantity:number) {
-    console.log(this.cart_data[index]);
-    this.getTotalPrice();
-  }
+  updateItem(item: ShoppingCartItemList) {
+    let user_id  = item.user_id;
 
-  removeItem(item: CartProductInfo) {
-    
-    this._api.postTypeRequest('removeItem', item).subscribe((res: any) => {
+    this._api.postTypeRequest('updateItem/'+user_id, item).subscribe((res: any) => {
       console.log(res)
     }, err => {
       console.log(err)
     });
     this.getTotalPrice();
+  }
+
+  removeItem(item: CartProductInfo, user_id : number) {
+    
+    this._api.postTypeRequest('removeItem/'+user_id, item).subscribe((res: any) => {
+      console.log(res)
+    }, err => {
+      console.log(err)
+    });
+    this.getTotalPrice();
+
+    window.location.reload();
   }
 
   updateDB(){
@@ -94,7 +102,19 @@ export class ShoppingCartComponent implements OnInit {
 
   }
 
-  onCheckOut() {
-    alert("결제가 완료되었습니다.");
+  onCheckOut(user_id : number) {
+    console.log(user_id)
+    this._api.postTypeRequest('checkout',user_id).subscribe((res: any) => {
+      console.log(res)
+      if(res == "Checkout")
+      {
+        alert("결제가 완료되었습니다.");
+      }
+      this.total = 0
+    }, err => {
+      console.log(err)
+    });
+
+    
   }
 }
