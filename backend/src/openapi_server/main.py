@@ -33,31 +33,6 @@ from db.db_pool import get_db_pool, get_db_conn
 
 ##Postgresql 연동
 #db = psycopg2.connect(host='localhost', dbname='postgres',user='postgres',password='1234',port=5432)
-db = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
-cursor=db.cursor()
-
-def execute(self,query,args={}):
-    self.cursor.execute(query,args)
-    row = self.cursor.fetchall()
-    return row
-
-def insertDB(table,colum,data):
-    sql = " INSERT INTO {table}({colum}) VALUES ('{data}') ;".format(table=table,colum=colum,data=data)
-    try:
-        cursor.execute(sql)
-        db.commit()
-    except Exception as e :
-        print(" insert DB  ",e) 
-        
-def readDB(table,colum, query):
-    sql = " SELECT {colum} from {table} {query}".format(colum=colum,table=table, query=query)
-    try:
-        cursor.execute(sql)
-        result = cursor.fetchall()
-    except Exception as e :
-        result = (" read DB err",e)
-    
-    return result
 
 app = FastAPI(
     title="MDL Assignment",
@@ -147,7 +122,6 @@ def register(user : Register):
     userID = user.userID
     password = user.password
     email = user.email
-    return_value = ""
     
     
     with get_db_conn() as conn:
@@ -180,21 +154,6 @@ def shoppingCart(user:UserID):
         product_info = conn.selectDB("products", "*", "id in ({cond})".format(cond=cond[:-1]) )
        
         return { "product_info": product_info, "cart_info" :cart_info }
-    
 
-@app.post('/removeItem')
-def removeItem(item : Cart_Product):
-    id: item.id
-    name: item.name
-    img_addr: item.imgaddr
-    description: item.description
-    price: item.price
-    created_at : item.created_at
-    
-    print(id)
-    return
-    
-    
-    
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
