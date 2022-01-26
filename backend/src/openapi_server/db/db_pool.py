@@ -1,4 +1,8 @@
 from email.errors import NonPrintableDefect
+from ntpath import join
+from operator import length_hint
+from posixpath import split
+from tkinter.tix import COLUMN
 from fastapi import FastAPI
 import psycopg2
 from psycopg2 import pool
@@ -33,8 +37,23 @@ class DBConnection:
 			cursor.close()
 		
 
+	def updateDB(self, table, set_query, where_query, *args, cursor_factory=DictCursor):
+		if where_query is not None:
+			where_query = " WHERE " + where_query
+		sql = " UPDATE {table} SET {set_query} {where_query};".format(table=table,set_query=set_query,where_query=where_query)
+		try:
+			cursor= self.connection.cursor(cursor_factory=cursor_factory)
+			cursor.execute(sql, args)
+			self.connection.commit()
+			return True
+		except Exception as e :
+			print(" db insertDB ", e) 
+			return False
+		finally:
+			cursor.close()
+
 	def insertDB(self, table, colum, param, *args, cursor_factory=DictCursor):
-		sql = " INSERT INTO {table}({colum}) VALUES ({param}) ;".format(table=table,colum=colum,param=param)
+		sql = " INSERT INTO {table}({colum}) VALUES ({param});".format(table=table,colum=colum,param=param)
 		
 		try:
 			cursor= self.connection.cursor(cursor_factory=cursor_factory)
@@ -42,21 +61,38 @@ class DBConnection:
 			self.connection.commit()
 			return True
 		except Exception as e :
-			print(" db execute ", e) 
+			print(" db insertDB ", e) 
 			return False
 		finally:
 			cursor.close()
 
-	def selectDB(self, table,colum, query = None, *args, cursor_factory=RealDictCursor):
-		query = query or ''
-		sql = " SELECT {colum} from {table} {query}".format(colum=colum,table=table, query=query)
+	def deleteDB(self, table, where_query, *args, cursor_factory=DictCursor):
+		if where_query is not None:
+			where_query = " WHERE " + where_query
+		sql = " delete from {table} {where_query};".format(table=table,where_query=where_query)
+		
+		try:
+			cursor= self.connection.cursor(cursor_factory=cursor_factory)
+			cursor.execute(sql, args)
+			self.connection.commit()
+			return True
+		except Exception as e :
+			print(" db deleteDB ", e) 
+			return False
+		finally:
+			cursor.close()
+
+	def selectDB(self, table,colum, where_query = None, *args, cursor_factory=RealDictCursor):
+		if where_query is not None:
+			where_query = " WHERE " + where_query
+		sql = " SELECT {colum} from {table} {where_query}".format(colum=colum,table=table, where_query=where_query)
 		try:
 			cursor= self.connection.cursor(cursor_factory=cursor_factory)
 			cursor.execute(sql,args)
 			row = cursor.fetchall()
 			return row
 		except Exception as e :
-			print(" db execute ", e) 
+			print(" db selectDB ", e) 
 		finally:
 			cursor.close()
 

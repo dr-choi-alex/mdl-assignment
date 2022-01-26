@@ -118,7 +118,7 @@ async def users_user_id_get(
     userId: str = Path(None, description="The id of the user to retrieve"),
 ) -> User:
     with get_db_conn() as conn:
-        result = conn.selectDB("users", "*", "where id = %d", userId)
+        result = conn.selectDB("users", "*", "id = %d", userId)
         if len(result) > 0 and result is not None:
             return result
         else:
