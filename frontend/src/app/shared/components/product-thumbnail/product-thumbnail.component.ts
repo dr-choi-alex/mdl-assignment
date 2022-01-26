@@ -34,12 +34,12 @@ export class ProductThumbnailComponent implements OnInit {
     // console.log("product Info")
     // console.log(this.data)
 
-    const userLoginID = this.authService.getUser().userID;
+    //const userLoginID = this.authService.getUser().userID;
     const userID = this.authService.getUser().id;
     const ProductID = this.data.id
-    const body = {userID : userID, productID : ProductID}
+    const body = {productID : ProductID, quantity : 1}
 
-    const url = 'users/' + userLoginID + "/Carts" 
+    const url = 'users/' + userID + "/Carts" 
 
     // console.log("User Info")
     // console.log(this.authService.getUser())
@@ -51,9 +51,9 @@ export class ProductThumbnailComponent implements OnInit {
     //post임 수정해야함, API 수정 후 다시 skeleton 만들어서 하기
     //=======================================================
     this._api.putTypeRequest(url, body).subscribe((res: any) => {
-      console.log(res)
+      console.log(res.msg)
 
-      alert(res)
+      alert(res.msg)
 
     }, err => {
       console.log(err)
