@@ -26,13 +26,11 @@ from db.db_pool import get_db_conn
 
 router = APIRouter()
 
-
 class Product(BaseModel):
     name : str
     price: int
-    image : str
     description : str
-    
+    image : str
 
 
 @router.get(
@@ -41,14 +39,18 @@ class Product(BaseModel):
         200: {"model": List[Product], "description": "Success Resopnse"},
     },
     tags=["products"],
-    summary="Get the products in the store",
+    summary="Get the products in the store / main page",
 )
 async def products_get(
-) -> List[Product]:
-    """Get Products Information"""
+# ) -> List[Product]:
+#     """Get Products Information"""
+#     ...
+) :
+
     with get_db_conn() as conn:
         result = conn.selectDB("products", "*")
         return result
+
 
 @router.post(
     "/products",
@@ -61,12 +63,14 @@ async def products_get(
 )
 async def products_post(
     product : Product,
-    #inline_object: InlineObject = Body(None, description=""),
-) -> str:
+    # inline_object: InlineObject = Body(None, description=""),
+# ) -> str:
+#      ...
+) : 
     with get_db_conn() as conn:
         result = conn.insertDB("products", "name, img_addr, description, price", "%s, %s, %s, %s", product.name, product.image, product.description, product.price)
         
         if result:
-            return JSONResponse(status_code=201, content=dict(msg="Success"))
+            return {"name" : product.name, "image" : product.image, "price" : product.price, "description" : product.description}
         else:
             return JSONResponse(status_code=400, content=dict(msg="Fail"))

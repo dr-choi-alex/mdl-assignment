@@ -20,13 +20,11 @@ class InlineObject1(BaseModel):
         user_id: The user_id of this InlineObject1 [Optional].
         password: The password of this InlineObject1 [Optional].
         e_mail: The e_mail of this InlineObject1 [Optional].
-        user_type: The user_type of this InlineObject1 [Optional].
     """
 
     user_name: Optional[str] = None
     user_id: Optional[str] = None
     password: Optional[str] = None
     e_mail: Optional[str] = None
-    user_type: Optional[int] = None
 
 InlineObject1.update_forward_refs()

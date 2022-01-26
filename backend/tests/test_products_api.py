@@ -10,7 +10,7 @@ from openapi_server.models.product import Product  # noqa: F401
 def test_products_get(client: TestClient):
     """Test case for products_get
 
-    Get the products in the store / main page
+    Get the products in the store
     """
 
     headers = {

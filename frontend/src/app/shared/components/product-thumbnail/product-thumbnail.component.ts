@@ -50,7 +50,7 @@ export class ProductThumbnailComponent implements OnInit {
     //=========================[ 확인 ]======================
     //post임 수정해야함, API 수정 후 다시 skeleton 만들어서 하기
     //=======================================================
-    this._api.putTypeRequest(url, body).subscribe((res: any) => {
+    this._api.postTypeRequest(url, body).subscribe((res: any) => {
       console.log(res.msg)
 
       alert(res.msg)

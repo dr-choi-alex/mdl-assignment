@@ -188,13 +188,18 @@ paths:
                 Quantity:
                   type: integer
       responses:
-        "200":
+        "201":
+          content:
+            application/json:
+              schema:
+                example: Fail to create data.
+                type: string
           description: Success Resopnse with path param
         "400":
           content:
             application/json:
               schema:
-                example: Fail to change data.
+                example: Fail to create data.
                 type: string
           description: Fail Resopnse with path param
       summary: add the user's cart item

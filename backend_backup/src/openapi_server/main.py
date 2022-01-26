@@ -10,32 +10,33 @@
 """
 
 
-from fastapi import FastAPI
-
-from apis.products_api import router as ProductsApiRouter
-from apis.users_api import router as UsersApiRouter
-
 from ast import Num
 import uvicorn
 from cmath import log
 from ntpath import join
 from time import time
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
 from numpy import array, integer, number
 
+from apis.products_api import router as ProductsApiRouter
+from apis.sign_api import router as SignApiRouter
+from apis.users_api import router as UsersApiRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from db.db_pool import get_db_pool, get_db_conn
+
+
+##Postgresql 연동
+#db = psycopg2.connect(host='localhost', dbname='postgres',user='postgres',password='1234',port=5432)
 
 app = FastAPI(
     title="MDL Assignment",
     description="Shopping Mall Demo",
     version="1.0",
 )
-
-
 origins = [
     "http://localhost",
     "http://localhost:4200",
@@ -49,10 +50,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(ProductsApiRouter)
+app.include_router(SignApiRouter)
 app.include_router(UsersApiRouter)
-
 
 get_db_pool().init_app(app, DB_USER="testuser"
                             , DB_PW="1234"

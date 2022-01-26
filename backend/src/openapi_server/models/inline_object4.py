@@ -16,15 +16,11 @@ class InlineObject4(BaseModel):
 
     InlineObject4 - a model defined in OpenAPI
 
-        user_name: The user_name of this InlineObject4 [Optional].
-        user_id: The user_id of this InlineObject4 [Optional].
-        password: The password of this InlineObject4 [Optional].
-        e_mail: The e_mail of this InlineObject4 [Optional].
+        product_id: The product_id of this InlineObject4 [Optional].
+        quantity: The quantity of this InlineObject4 [Optional].
     """
 
-    user_name: Optional[str] = None
-    user_id: Optional[str] = None
-    password: Optional[str] = None
-    e_mail: Optional[str] = None
+    product_id: Optional[int] = None
+    quantity: Optional[int] = None
 
 InlineObject4.update_forward_refs()

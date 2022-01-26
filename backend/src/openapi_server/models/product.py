@@ -16,15 +16,17 @@ class Product(BaseModel):
 
     Product - a model defined in OpenAPI
 
-        object_id: The object_id of this Product [Optional].
+        product_id: The product_id of this Product [Optional].
         product_name: The product_name of this Product [Optional].
         price: The price of this Product [Optional].
-        image_url: The image_url of this Product [Optional].
+        image: The image of this Product [Optional].
+        description: The description of this Product [Optional].
     """
 
-    object_id: Optional[int] = None
+    product_id: Optional[int] = None
     product_name: Optional[str] = None
     price: Optional[int] = None
-    image_url: Optional[str] = None
+    image: Optional[str] = None
+    description: Optional[str] = None
 
 Product.update_forward_refs()
