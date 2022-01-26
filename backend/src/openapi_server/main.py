@@ -10,7 +10,7 @@
 """
 
 
-from operator import truediv
+from ast import Num
 import uvicorn
 from cmath import log
 from ntpath import join
@@ -18,7 +18,8 @@ from time import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
-from numpy import array
+
+from numpy import array, integer, number
 
 from apis.products_api import router as ProductsApiRouter
 from apis.sign_api import router as SignApiRouter
@@ -103,6 +104,16 @@ class Register(BaseModel):
     password : str
     email : str
 
+    
+class Cart_Product(BaseModel):
+    id: str
+    name: str
+    img_addr: str
+    description: str
+    price: str
+    created_at : str
+    
+
 @app.post('/login')
 def login(user: User):
     userID = user.userID
@@ -110,6 +121,7 @@ def login(user: User):
     usertype = ""
     
     with get_db_conn() as conn:
+        
         #conn.deleteDB("carts", "user_id=%s", 56)
         result = conn.selectDB("users", "id, email, full_name, type", "login_id = %s and password = %s", userID, password)
 
@@ -150,9 +162,11 @@ def shoppingCart(user:UserID):
     userID = user.userID
 
     with get_db_conn() as conn:
+        
         result = conn.selectDB("users", "id", "login_id = %s", userID )
 
         user_id = result[0].get("id")
+        
         cart_info = conn.selectDB("carts", "*", "user_id = %s", user_id)
 
         if cart_info is None or len(cart_info) == 0:
@@ -162,10 +176,25 @@ def shoppingCart(user:UserID):
         for info in cart_info:
             cond = "{a} {b},".format(a=cond, b=info.get("product_id"))
 
+        
         product_info = conn.selectDB("products", "*", "id in ({cond})".format(cond=cond[:-1]) )
        
         return { "product_info": product_info, "cart_info" :cart_info }
     
 
+@app.post('/removeItem')
+def removeItem(item : Cart_Product):
+    id: item.id
+    name: item.name
+    img_addr: item.imgaddr
+    description: item.description
+    price: item.price
+    created_at : item.created_at
+    
+    print(id)
+    return
+    
+    
+    
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

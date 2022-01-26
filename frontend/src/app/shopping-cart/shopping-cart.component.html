@@ -20,7 +20,7 @@
                         <p class="item-number">#{{item.id}}</p>
                         <h3 class="item-name">{{item.name}}</h3>
                         <p class="qty">
-                            <input type="text" class="qty-input" [(ngModel)]="cart_data[i].quantity" >
+                            <input type="number" class="qty-input" [(ngModel)]="cart_data[i].quantity" value="quantity" (change)="updateItem(item,i)" >
                             x ${{item.price}}
                         </p>
                     </div>
@@ -37,7 +37,7 @@
         </ul>
 
         <a class="btn btn-continue pull-right">
-            Update DB <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+            Update DB <span class="glyphicon glyphicon-menu-right" aria-hidden="true" (click)="updateDB()" ></span>
         </a>
     </div>
     <!-- Order Summary -->

@@ -3,7 +3,7 @@
   <div class="card-body">
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
-            <label for="usertype">Usertype (seller = 0, buyer = 1)</label>
+            <label for="usertype">Usertype (buyer = 0, seller = 1)</label>
             <input type="text" formControlName="usertype" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.usertype.errors }" />
             <div *ngIf="submitted && f.usertype.errors" class="invalid-feedback">
                 <div *ngIf="f.usertype.errors.required">usertype is required</div>
