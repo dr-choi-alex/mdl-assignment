@@ -31,7 +31,7 @@ export class LogInComponent implements OnInit {
     // Backend로 데이터를 주고 받는 부분
     let b = this.loginForm.value
     console.log(b)
-    this._api.postTypeRequest('login', b).subscribe((res: any) => {
+    this._api.postTypeRequest("users/signin", b).subscribe((res: any) => {
       console.log(res)
      
       window.location.replace("./")

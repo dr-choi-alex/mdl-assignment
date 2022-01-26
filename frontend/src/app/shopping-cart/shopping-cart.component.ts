@@ -28,27 +28,26 @@ export class ShoppingCartComponent implements OnInit {
     this.getOrderSummary();
   }
 
-  updateItem(item: ShoppingCartItemList) {
-    let user_id  = item.user_id;
+  // updateItem(item: ShoppingCartItemList) {
+  //   let user_id  = item.user_id;
 
-    this._api.postTypeRequest('updateItem/'+user_id, item).subscribe((res: any) => {
+  //   this._api.postTypeRequest('updateItem/'+user_id, item).subscribe((res: any) => {
+  //     console.log(res)
+  //   }, err => {
+  //     console.log(err)
+  //   });
+  //   this.getTotalPrice();
+  // }
+
+  removeItem(item: ShoppingCartItemList, userId : number) {
+    console.log(userId)
+    this._api.postTypeRequest('users/'+userId+'/Carts', item).subscribe((res: any) => {
       console.log(res)
+      window.location.reload();
     }, err => {
       console.log(err)
     });
     this.getTotalPrice();
-  }
-
-  removeItem(item: CartProductInfo, user_id : number) {
-    
-    this._api.postTypeRequest('removeItem/'+user_id, item).subscribe((res: any) => {
-      console.log(res)
-    }, err => {
-      console.log(err)
-    });
-    this.getTotalPrice();
-
-    window.location.reload();
   }
 
   updateDB(){
@@ -84,10 +83,10 @@ export class ShoppingCartComponent implements OnInit {
 
   getOrderSummary() {
 
-    let b = this.authService.getUser();
-    console.log(b)
+    let userId = this.authService.getUser().userID;
+    console.log(userId)
     
-    this._api.postTypeRequest('shopping-cart', b).subscribe((res: any) => {
+    this._api.getTypeRequest('users/'+userId+'/Carts').subscribe((res: any) => {
       console.log(res.product_info)
       console.log(res.cart_info)
       this.data = res.product_info

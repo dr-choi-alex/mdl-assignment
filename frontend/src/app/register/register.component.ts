@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     let b = this.registerForm.value
     console.log(b)
-    this._api.postTypeRequest('register', b).subscribe((res: any) => {
+    this._api.postTypeRequest('users', b).subscribe((res: any) => {
       console.log(res)
       if(res.msg == "Success")
       {
