@@ -1,6 +1,6 @@
 type: object
 properties:
-  ObjectID:
+  ProductID:
     type: integer
     example: 1
   ProductName:
@@ -9,7 +9,10 @@ properties:
   Price:
     type: integer
     example: 2000
-  ImageUrl:
+  Image:
     type: string
     example: /car2.jpg
+  Description:
+    type: string
+    example: BMW
     
