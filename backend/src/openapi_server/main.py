@@ -11,7 +11,6 @@
 
 
 from ast import Num
-import string
 import uvicorn
 from cmath import log
 from ntpath import join
@@ -19,6 +18,7 @@ from time import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
+
 from numpy import array, integer, number
 
 from apis.products_api import router as ProductsApiRouter
@@ -96,7 +96,9 @@ def login(user: User):
     usertype = ""
     
     with get_db_conn() as conn:
-        result = conn.selectDB("users", "id, email, full_name, type", "where login_id = %s and password = %s", userID, password)
+        
+        #conn.deleteDB("carts", "user_id=%s", 56)
+        result = conn.selectDB("users", "id, email, full_name, type", "login_id = %s and password = %s", userID, password)
 
         # 아이디 찾기에 실패했을 때
         if len(result) == 0:
@@ -134,11 +136,12 @@ def shoppingCart(user:UserID):
     userID = user.userID
 
     with get_db_conn() as conn:
-        result = conn.selectDB("users", "id", "where login_id = %s", userID )
+        
+        result = conn.selectDB("users", "id", "login_id = %s", userID )
 
         user_id = result[0].get("id")
-        print(user_id)
-        cart_info = conn.selectDB("carts", "*", "where user_id = %s", user_id)
+        
+        cart_info = conn.selectDB("carts", "*", "user_id = %s", user_id)
 
         if cart_info is None or len(cart_info) == 0:
             return {}
@@ -147,7 +150,8 @@ def shoppingCart(user:UserID):
         for info in cart_info:
             cond = "{a} {b},".format(a=cond, b=info.get("product_id"))
 
-        product_info = conn.selectDB("products", "*", "where id in ({cond})".format(cond=cond[:-1]) )
+        
+        product_info = conn.selectDB("products", "*", "id in ({cond})".format(cond=cond[:-1]) )
        
         return { "product_info": product_info, "cart_info" :cart_info }
 

@@ -27,8 +27,8 @@ from db.db_pool import get_db_conn
 router = APIRouter()
 
 class Cart(BaseModel):
-    userID : int
     productID: int
+    quantity : int
 
 
 @router.post(
@@ -79,31 +79,42 @@ async def users_user_id_carts_put(
     cart : Cart,
     userId: str = Path(None, description="Reads and displays user&#39;s cart information."),
 ) : 
-    #=========================[ 확인 ]======================
-    #post임 수정해야함, API 수정 후 다시 skeleton 만들어서 하기
-    #=======================================================
+    # #=========================[ 확인 ]======================
+    # #post임 수정해야함, API 수정 후 다시 skeleton 만들어서 하기
+    # #=======================================================
 
-    # FIXME: API 수정 cart가 배열로, url path로 userId를 받고  cart에 productID, quantity만 있으면 됨. 
-    import psycopg2
+    # # FIXME: API 수정 cart가 배열로, url path로 userId를 받고  cart에 productID, quantity만 있으면 됨. 
+    # import psycopg2
 
-    connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
+    # connection = psycopg2.connect(host='10.99.80.67', dbname='mdl',user='testuser',password='1234',port=5432)
     
-    # Create a cursor to perform database operations
-    cursor = connection.cursor()
+    # # Create a cursor to perform database operations
+    # cursor = connection.cursor()
     
-    # write DB
+    # # write DB
 
-    sqlString = "SELECT * FROM carts WHERE user_id=%s AND product_id=%s"
-    cursor.execute(sqlString, (cart.userID, cart.productID))
-    print()
+    # sqlString = "SELECT * FROM carts WHERE user_id=%s AND product_id=%s"
+    # cursor.execute(sqlString, (cart.userID, cart.productID))
+    # print()
     
-    if cursor.rowcount > 0 :
-        return {"exist"}
-    else :
-        sqlString = "INSERT INTO carts (user_id, product_id, quantity) VALUES (%s, %s, %s);"
-        cursor.execute(sqlString, (cart.userID, cart.productID, 1) )
-        connection.commit()
-    return {"update DB"}
+    # if cursor.rowcount > 0 :
+    #     return {"exist"}
+    # else :
+    #     sqlString = "INSERT INTO carts (user_id, product_id, quantity) VALUES (%s, %s, %s);"
+    #     cursor.execute(sqlString, (cart.userID, cart.productID, 1) )
+    #     connection.commit()
+    # return {"update DB"}
+
+    with get_db_conn() as conn:
+            result = conn.selectDB("carts", "*", "where user_id = %s and product_id = %s", userId, cart.productID)
+
+            print(result)
+            
+            if len(result) > 0 and result is not None:
+                return JSONResponse(status_code=200, content=dict(msg="already exist"))
+            else:
+                result = conn.insertDB("carts", "user_id, product_id, quantity", "%s, %s, %s", userId, cart.productID, cart.quantity)
+                return JSONResponse(status_code=200, content=dict(msg="update DB"))
 
 
 @router.get(
@@ -118,7 +129,7 @@ async def users_user_id_get(
     userId: str = Path(None, description="The id of the user to retrieve"),
 ) -> User:
     with get_db_conn() as conn:
-        result = conn.selectDB("users", "*", "where id = %d", userId)
+        result = conn.selectDB("users", "*", "id = %d", userId)
         if len(result) > 0 and result is not None:
             return result
         else:
