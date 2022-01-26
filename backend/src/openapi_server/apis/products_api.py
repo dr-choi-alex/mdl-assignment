@@ -21,7 +21,7 @@ from models.inline_object import InlineObject
 from models.product import Product
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
-from db.database import get_db_conn
+from db.db_pool import get_db_conn
 
 
 router = APIRouter()
@@ -49,7 +49,7 @@ async def products_get(
 
     with get_db_conn() as conn:
         result = conn.selectDB("products", "*")
-    return result
+        return result
 
 
 @router.post(
@@ -67,12 +67,10 @@ async def products_post(
 # ) -> str:
 #      ...
 ) : 
-    
-
     with get_db_conn() as conn:
         result = conn.insertDB("products", "name, img_addr, description, price", "%s, %s, %s, %s", product.name, product.image, product.description, product.price)
-    
-    if result:
-        return {"name" : product.name, "image" : product.image, "price" : product.price, "description" : product.description}
-    else:
-        return JSONResponse(status_code=400, content="fail")
+        
+        if result:
+            return {"name" : product.name, "image" : product.image, "price" : product.price, "description" : product.description}
+        else:
+            return JSONResponse(status_code=400, content=dict(msg="Fail"))

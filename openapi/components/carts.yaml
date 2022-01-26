@@ -5,13 +5,13 @@ items:
     ProductID:
       type: integer
       example: 1
-    Count:
+    Quantity:
       type: integer
       example: 5
 
 example:
   - ProductID: 3
-    Count: 5
+    Quantity: 5
   
   - ProductID: 4
-    Count: 10
+    Quantity: 10
