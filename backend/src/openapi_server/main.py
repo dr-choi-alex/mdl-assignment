@@ -15,15 +15,9 @@ from fastapi import FastAPI
 from apis.products_api import router as ProductsApiRouter
 from apis.users_api import router as UsersApiRouter
 
-from ast import Num
 import uvicorn
-from cmath import log
-from ntpath import join
-from time import time
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
-
-from numpy import array, integer, number
 
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
