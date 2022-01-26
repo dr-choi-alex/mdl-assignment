@@ -16,15 +16,15 @@ class InlineObject(BaseModel):
 
     InlineObject - a model defined in OpenAPI
 
+        object_id: The object_id of this InlineObject [Optional].
         product_name: The product_name of this InlineObject [Optional].
         price: The price of this InlineObject [Optional].
         image: The image of this InlineObject [Optional].
-        description: The description of this InlineObject [Optional].
     """
 
+    object_id: Optional[str] = None
     product_name: Optional[str] = None
     price: Optional[int] = None
     image: Optional[str] = None
-    description: Optional[str] = None
 
 InlineObject.update_forward_refs()

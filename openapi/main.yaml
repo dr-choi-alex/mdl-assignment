@@ -4,12 +4,12 @@ info:
   description: Shopping Mall Demo
   version: '1.0'
 servers:
-  - url: http://localhost:5000/#/
+  - url: http://localhost:8000/#/
 paths:
   /products:
     description: Product Information
     get:
-      summary: Get the products in the store / main page
+      summary: Get the products in the store 
       tags:
         - products
       description: Get Products Information
@@ -35,13 +35,13 @@ paths:
             schema:
               type: object
               properties:
-                ObjectID:
-                  type: string
                 ProductName:
                   type: string
                 Price:
                   type: integer
                 Image:
+                  type: string
+                Description:
                   type: string
 
       responses:
@@ -85,6 +85,8 @@ paths:
                   type: string
                 E-Mail:
                   type: string
+                UserType:
+                  type: integer
 
       responses:
         '201':
@@ -103,143 +105,11 @@ paths:
                 type: string     
                 example: 400 error. Fail to register.
 
-  /users/{userId}:
-    description: User information
-    get:
-      summary: Get the user detail information
-      tags:
-        - users
-      parameters:
-        - name: "userId"
-          required: true
-          in: "path"
-          description: The id of the user to retrieve
-          schema:
-            type: string
-           
-      responses:
-        '200':
-          description: Success Resopnse
-          content:
-            application/json:
-              schema:
-                $ref: './components/user.yaml' 
-
-  /users/{userId}/Carts:
-    description: the user cart information
-    get:
-      summary: Get the user's cart information
-      tags:
-        - users
-      parameters:
-        - name: userId
-          required: true
-          in: path
-          description: Reads and displays user's cart information.
-          schema:
-            type: integer
-           
-      responses:
-        '200':
-          description: Success Resopnse
-          content:
-            application/json:
-              schema:
-                $ref: './components/carts.yaml' 
-    post:
-      parameters:
-      - description: add product info to user's cart 
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        description: delete the user's cart item
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ObjectID:
-                  type: integer
-                Quantity:
-                  type: integer
-      responses:
-        "200":
-          description: Success Resopnse with path param
-        "400":
-          content:
-            application/json:
-              schema:
-                example: Fail to change data.
-                type: string
-          description: Fail Resopnse with path param
-      summary: add the user's cart item
-      tags:
-      - users
-    put:
-      tags:
-        - users
-      summary: Update the user's cart information
-      parameters:
-        - name: userId
-          required: true
-          in: path
-          description: Reads and displays user's cart information.
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Success Resopnse with path param
-        '400':
-          description: Fail Resopnse with path param
-          content:
-            application/json:
-              schema:
-                type: string
-                example: Fail to change data.
-    
-    delete:
-      tags: 
-        - users
-      summary: delete the user's cart item
-      parameters:
-      - description: Reads and displays user's cart information.
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        description: delete the user's cart item
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ObjectID:
-                  type: integer
-      responses:
-        "200":
-          description: Success Resopnse with path param
-        "400":
-          content:
-            application/json:
-              schema:
-                example: Fail to delete data.
-                type: string
-          description: Fail Resopnse with path param
-      
-  /signin:
+  /users/signin:
     description: Send the user's id and password to find out appropriate DB data.
     post:
       tags:
-        - sign
+        - users
       summary: Login User
       requestBody:
         description: Send the user's id and password to find out appropriate DB data.
@@ -275,85 +145,131 @@ paths:
                 type: string
                 example: Fail to Log-in.
 
-
-  /signout:
-    description: Add data to DB by sending user information.
-    post:
+  /users/{userId}/Carts:
+    description: the user cart information
+    get:
+      summary: Get the user's cart information
       tags:
-        - sign
-      summary: Logout User
-
+        - users
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          description: Reads and displays user's cart information.
+          schema:
+            type: integer
+           
+      responses:
+        '200':
+          description: Success Resopnse
+          content:
+            application/json:
+              schema:
+                $ref: './components/carts.yaml' 
+    post:
+      parameters:
+      - description: add product info to user's cart 
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
       requestBody:
-        description: Add data to DB by sending user information.
+        description: add the user's cart item
         required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                UserName:
-                  type: string
-                UserID:
-                  type: string
-                Password:
-                  type: string
-                E-Mail:
-                  type: string
-
+                ProductID:
+                  type: integer
+                Quantity:
+                  type: integer
       responses:
-        '201':
+        "201":
+          content:
+            application/json:
+              schema:
+                example: Fail to create data.
+                type: string
           description: Success Resopnse with path param
+        "400":
           content:
             application/json:
               schema:
-                type: string     
-                example: Alert Success to register.
-                # Go to the 'Log-in' page.
-        '400':
+                example: Fail to create data.
+                type: string
           description: Fail Resopnse with path param
-          content:
-            application/json:
-              schema:
-                type: string     
-                example: 400 error. Fail to register.
-
-  /signup:
-    description: Add data to DB by sending user information.
-    post:
+      summary: add the user's cart item
       tags:
-        - sign
-      summary: Logout User
+      - users
 
+    put:
+      tags:
+        - users
+      summary: Update the user's cart information
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          description: Reads and displays user's cart information.
+          schema:
+            type: integer
       requestBody:
-        description: Add data to DB by sending user information.
+        description: update the user's cart item
         required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                UserName:
-                  type: string
-                UserID:
-                  type: string
-                Password:
-                  type: string
-                E-Mail:
-                  type: string
-
+                ProductID:
+                  type: integer
+                Quantity:
+                  type: integer
       responses:
-        '201':
+        '200':
           description: Success Resopnse with path param
-          content:
-            application/json:
-              schema:
-                type: string     
-                example: Alert Success to register.
-                # Go to the 'Log-in' page.
         '400':
           description: Fail Resopnse with path param
           content:
             application/json:
               schema:
-                type: string     
-                example: 400 error. Fail to register.
+                type: string
+                example: Fail to change data.
+    
+    delete:
+      tags: 
+        - users
+      summary: Delete the user's cart item
+      parameters:
+      - description: Reads and displays user's cart information.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: delete the user's cart item
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ProductID:
+                  type: integer
+      responses:
+        "200":
+          description: Success Resopnse with path param
+        "400":
+          content:
+            application/json:
+              schema:
+                example: Fail to delete data.
+                type: string
+          description: Fail Resopnse with path param
+  

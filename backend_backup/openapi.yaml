@@ -4,7 +4,7 @@ info:
   title: MDL Assignment
   version: "1.0"
 servers:
-- url: http://localhost:8000/#/
+- url: http://localhost:5000/#/
 paths:
   /products:
     description: Product Information
@@ -17,7 +17,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/products'
           description: Success Resopnse
-      summary: Get the products in the store
+      summary: Get the products in the store / main page
       tags:
       - products
     post:
@@ -27,6 +27,9 @@ paths:
           application/json:
             schema:
               properties:
+                ObjectID:
+                  title: ObjectID
+                  type: string
                 ProductName:
                   title: ProductName
                   type: string
@@ -35,9 +38,6 @@ paths:
                   type: integer
                 Image:
                   title: Image
-                  type: string
-                Description:
-                  title: Description
                   type: string
               title: inline_object
               type: object
@@ -82,9 +82,6 @@ paths:
                 E-Mail:
                   title: E-Mail
                   type: string
-                UserType:
-                  title: UserType
-                  type: integer
               title: inline_object_1
               type: object
         description: Add data to DB by sending user information.
@@ -107,7 +104,118 @@ paths:
       summary: Create User
       tags:
       - users
-  /users/signin:
+
+  /users/{userId}:
+    description: User information
+    get:
+      parameters:
+      - description: The id of the user to retrieve
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: Success Resopnse
+      summary: Get the user detail information
+      tags:
+      - users
+
+  /users/{userId}/Carts:
+    description: the user cart information
+    get:
+      parameters:
+      - description: Reads and displays user's cart information.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  Carts:
+                    $ref: '#/components/schemas/carts'
+                  Products:
+                    $ref: '#/components/schemas/products'
+
+          description: Success Resopnse
+      summary: Get the user's cart items
+      tags:
+      - users
+
+    post:
+      parameters:
+      - description: Reads and displays user's cart information.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/inline_cartitem'
+        description: Add data to DB by sending user information.
+        required: true
+      responses:
+        "200":
+          description: Success Resopnse with path param
+        "400":
+          content:
+            application/json:
+              schema:
+                example: Fail to change data.
+                type: string
+          description: Fail Resopnse with path param
+      summary: add the user's cart item
+      tags:
+      - users
+
+    delete:
+      parameters:
+      - description: Reads and displays user's cart information.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                ProductID:
+                  type: integer
+      responses:
+        "200":
+          description: Success Resopnse with path param
+        "400":
+          content:
+            application/json:
+              schema:
+                example: Fail to change data.
+                type: string
+          description: Fail Resopnse with path param
+      summary: delete the user's cart item
+      tags:
+      - users
+
+  /signin:
     description: Send the user's id and password to find out appropriate DB data.
     post:
       requestBody:
@@ -144,174 +252,107 @@ paths:
           description: Fail to Log-in.
       summary: Login User
       tags:
-      - users
-  /users/{userId}/Carts:
-    delete:
-      parameters:
-      - description: Reads and displays user's cart information.
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: integer
-        style: simple
-      requestBody:
-        $ref: '#/components/requestBodies/inline_object_5'
-        content:
-          application/json:
-            schema:
-              properties:
-                ProductID:
-                  title: ProductID
-                  type: integer
-              title: inline_object_5
-              type: object
-        description: delete the user's cart item
-        required: true
-      responses:
-        "200":
-          description: Success Resopnse with path param
-        "400":
-          content:
-            application/json:
-              schema:
-                example: Fail to delete data.
-                type: string
-          description: Fail Resopnse with path param
-      summary: Delete the user's cart item
-      tags:
-      - users
-    description: the user cart information
-    get:
-      parameters:
-      - description: Reads and displays user's cart information.
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: integer
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/carts'
-          description: Success Resopnse
-      summary: Get the user's cart information
-      tags:
-      - users
+      - sign
+  /signout:
+    description: Add data to DB by sending user information.
     post:
-      parameters:
-      - description: add product info to user's cart
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: integer
-        style: simple
-      requestBody:
-        $ref: '#/components/requestBodies/inline_object_4'
-        content:
-          application/json:
-            schema:
-              properties:
-                ProductID:
-                  title: ProductID
-                  type: integer
-                Quantity:
-                  title: Quantity
-                  type: integer
-              title: inline_object_4
-              type: object
-        description: add the user's cart item
-        required: true
-      responses:
-        "200":
-          description: Success Resopnse with path param
-        "400":
-          content:
-            application/json:
-              schema:
-                example: Fail to change data.
-                type: string
-          description: Fail Resopnse with path param
-      summary: add the user's cart item
-      tags:
-      - users
-    put:
-      parameters:
-      - description: Reads and displays user's cart information.
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: integer
-        style: simple
       requestBody:
         $ref: '#/components/requestBodies/inline_object_3'
         content:
           application/json:
             schema:
               properties:
-                ProductID:
-                  title: ProductID
-                  type: integer
-                Quantity:
-                  title: Quantity
-                  type: integer
+                UserName:
+                  title: UserName
+                  type: string
+                UserID:
+                  title: UserID
+                  type: string
+                Password:
+                  title: Password
+                  type: string
+                E-Mail:
+                  title: E-Mail
+                  type: string
               title: inline_object_3
               type: object
-        description: update the user's cart item
+        description: Add data to DB by sending user information.
         required: true
       responses:
-        "200":
+        "201":
+          content:
+            application/json:
+              schema:
+                example: Alert Success to register.
+                type: string
           description: Success Resopnse with path param
         "400":
           content:
             application/json:
               schema:
-                example: Fail to change data.
+                example: 400 error. Fail to register.
                 type: string
           description: Fail Resopnse with path param
-      summary: Update the user's cart information
+      summary: Logout User
       tags:
-      - users
+      - sign
+  /signup:
+    description: Add data to DB by sending user information.
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_4'
+        content:
+          application/json:
+            schema:
+              properties:
+                UserName:
+                  title: UserName
+                  type: string
+                UserID:
+                  title: UserID
+                  type: string
+                Password:
+                  title: Password
+                  type: string
+                E-Mail:
+                  title: E-Mail
+                  type: string
+              title: inline_object_4
+              type: object
+        description: Add data to DB by sending user information.
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                example: Alert Success to register.
+                type: string
+          description: Success Resopnse with path param
+        "400":
+          content:
+            application/json:
+              schema:
+                example: 400 error. Fail to register.
+                type: string
+          description: Fail Resopnse with path param
+      summary: Logout User
+      tags:
+      - sign
+
 components:
   requestBodies:
-    inline_object_1:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/inline_object_1'
-      required: true
     inline_object:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/inline_object'
       required: true
-    inline_object_5:
+    inline_object_1:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/inline_object_5'
-      required: true
-    inline_object_4:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/inline_object_4'
-      required: true
-    inline_object_3:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/inline_object_3'
+            $ref: '#/components/schemas/inline_object_1'
       required: true
     inline_object_2:
       content:
@@ -319,21 +360,64 @@ components:
           schema:
             $ref: '#/components/schemas/inline_object_2'
       required: true
+    inline_object_3:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_3'
+      required: true
+    inline_object_4:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_4'
+      required: true
+    inline_cartitem:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_cartitem'
+      required: true
+    
   schemas:
     products:
       example:
-      - ProductID: 3
+      - ObjectID: 3
         ProductName: car1
         Price: 1000
-        Image: C:\Users\jusong\Desktop\car.jpg
-        Description: this is BMW
-      - ProductID: 4
+        ImagePath: C:\Users\jusong\Desktop\car.jpg
+      - ObjectID: 4
         ProductName: car2
         Price: 2000
-        Image: this is KIA
+        ImagePath: C:\Users\jusong\Desktop\car2.jpg
       items:
         $ref: '#/components/schemas/product'
       type: array
+    user:
+      example:
+        UserName: Test
+        Email: TestUser@test.com
+        UserID: TestUser
+        UserType: Seller
+      properties:
+        UserType:
+          example: Seller
+          title: UserType
+          type: string
+        UserName:
+          example: Test
+          title: UserName
+          type: string
+        UserID:
+          example: TestUser
+          title: UserID
+          type: string
+        Email:
+          example: TestUser@test.com
+          title: Email
+          type: string
+      title: user
+      type: object
     carts:
       example:
       - ProductID: 3
@@ -352,9 +436,9 @@ components:
       type: array
     product:
       properties:
-        ProductID:
+        ObjectID:
           example: 1
-          title: ProductID
+          title: ObjectID
           type: integer
         ProductName:
           example: car
@@ -364,18 +448,17 @@ components:
           example: 2000
           title: Price
           type: integer
-        Image:
+        ImageUrl:
           example: /car2.jpg
-          title: Image
-          type: string
-        Description:
-          example: BMW
-          title: Description
+          title: ImageUrl
           type: string
       title: product
       type: object
     inline_object:
       properties:
+        ObjectID:
+          title: ObjectID
+          type: string
         ProductName:
           title: ProductName
           type: string
@@ -384,9 +467,6 @@ components:
           type: integer
         Image:
           title: Image
-          type: string
-        Description:
-          title: Description
           type: string
       title: inline_object
       type: object
@@ -404,9 +484,6 @@ components:
         E-Mail:
           title: E-Mail
           type: string
-        UserType:
-          title: UserType
-          type: integer
       title: inline_object_1
       type: object
     inline_object_2:
@@ -421,28 +498,40 @@ components:
       type: object
     inline_object_3:
       properties:
-        ProductID:
-          title: ProductID
-          type: integer
-        Quantity:
-          title: Quantity
-          type: integer
+        UserName:
+          title: UserName
+          type: string
+        UserID:
+          title: UserID
+          type: string
+        Password:
+          title: Password
+          type: string
+        E-Mail:
+          title: E-Mail
+          type: string
       title: inline_object_3
       type: object
     inline_object_4:
       properties:
-        ProductID:
-          title: ProductID
-          type: integer
-        Quantity:
-          title: Quantity
-          type: integer
+        UserName:
+          title: UserName
+          type: string
+        UserID:
+          title: UserID
+          type: string
+        Password:
+          title: Password
+          type: string
+        E-Mail:
+          title: E-Mail
+          type: string
       title: inline_object_4
       type: object
-    inline_object_5:
+    inline_cartitem:
       properties:
         ProductID:
-          title: ProductID
           type: integer
-      title: inline_object_5
-      type: object
+        Quantity:
+          type: integer
+

@@ -134,5 +134,3 @@ async def users_user_id_get(
             return result
         else:
             return JSONResponse(status_code=400, content=dict(msg="User ID does not exist"))
-
-
