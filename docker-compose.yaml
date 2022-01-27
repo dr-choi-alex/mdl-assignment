@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: ./backend
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       - DB_USERNAME=testuser
       - DB_PASSWORD=1234
@@ -17,7 +17,7 @@ services:
   web:
     build:
       context: ./frontend
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: ./Dockerfile
     ports:
       - "80:80"
     depends_on:
