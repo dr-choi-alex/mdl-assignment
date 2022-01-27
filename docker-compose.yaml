@@ -5,6 +5,7 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile
     environment:
+      - ORIGINS_URL=http://10.99.20.21,http://10.99.20.21:80
       - DB_USERNAME=testuser
       - DB_PASSWORD=1234
       - DB_HOST=10.99.80.67
