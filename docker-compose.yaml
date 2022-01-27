@@ -5,15 +5,15 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile
     environment:
-      - ORIGINS_URL=http://10.99.20.21,http://10.99.20.21:80
+      - ORIGINS_URL=http://10.99.20.21,http://10.99.20.21:80,http://10.99.80.30,http://10.99.80.30:80
       - DB_USERNAME=testuser
       - DB_PASSWORD=1234
       - DB_HOST=10.99.80.67
       - DB_PORT=5432
       - DB_NAME=mdl
     ports:
-      - "8000:8000"
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+      - "5252:5252"
+    command: uvicorn main:app --host 0.0.0.0 --port 5252
 
   web:
     build:
