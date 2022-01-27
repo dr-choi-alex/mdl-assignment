@@ -9,10 +9,10 @@
 
 ## How to run mdl-Assignment service 
 
-    1. git clone https://github.com/dr-choi-alex/mdl-assignment.git
+1. git clone https://github.com/dr-choi-alex/mdl-assignment.git
     
-    2. Setting environment in docker-compose.yaml
-    ``` C
+2. Setting environment in docker-compose.yaml
+
     version: '3.6'
         services:
             api:
@@ -38,6 +38,6 @@
                 - "80:80"
                 depends_on:
                 - api
-    ```
+
     
-    3.docker-compose up --build
+3.docker-compose up --build
