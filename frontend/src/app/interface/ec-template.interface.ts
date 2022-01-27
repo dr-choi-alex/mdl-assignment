@@ -68,6 +68,7 @@ export interface ShoppingCartItem {
 export interface ShoppingCartItemList {
   product_id: number;
   quantity: number;
+
 }
 
 export interface OrderInfo {

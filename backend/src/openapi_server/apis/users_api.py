@@ -34,6 +34,10 @@ class Cart(BaseModel):
     productID: int
     quantity : int
     
+class Cart2(BaseModel):
+    product_id: int
+    quantity : int
+    
 class User(BaseModel):
     userID: str
     password: str
@@ -114,28 +118,30 @@ async def users_signin_post(
         }
 
 
+
 @router.delete(
     "/users/{userId}/Carts",
     responses={
-        200: {"description": "Success Resopnse with path param"},
+        200: {"model": str, "description": "Success Resopnse with path param"},
         400: {"model": str, "description": "Fail Resopnse with path param"},
     },
     tags=["users"],
     summary="Delete the user&#39;s cart item",
 )
 async def users_user_id_carts_delete(
-    cart : Cart,
+    cart : Cart2,
     userId: int = Path(None, description="Reads and displays user&#39;s cart information."),
-    # inline_object5: InlineObject5 = Body(None, description=""),
-) -> None:
-    print(userId)
+    # inline_object3: InlineObject3 = Body(None, description=""),
+) -> str:
+    print("delete")
     with get_db_conn() as conn:
-        result = conn.deleteDB ("carts", "user_id=%s and product_id=%s", userId,cart.productID )
-        if len(result) > 0 and result is not None:
-            return result
+        if cart.product_id == 0:
+            result = conn.deleteDB ("carts", "user_id=%s", userId  )
         else:
-            return {}
-
+            result = conn.deleteDB ("carts", "user_id=%s and product_id=%s", userId ,cart.product_id )
+    
+    print(userId, cart.product_id) 
+    return {"user_id" : userId, "product_id":cart.product_id }
 
 @router.get(
     "/users/{userId}/Carts",
@@ -148,13 +154,25 @@ async def users_user_id_carts_delete(
 async def users_user_id_carts_get(
     userId: int = Path(None, description="Reads and displays user&#39;s cart information."),
 ) -> List[object]:
+    print("abc")
     with get_db_conn() as conn:
-        result = conn.selectDB("carts", "*","user_id = %d", userId)
-        if len(result) > 0 and result is not None:
-            return result
-        else:
+        result = conn.selectDB("users", "id", "id = %s", userId)
+        
+        user_id = result[0].get("id")
+        
+        cart_info = conn.selectDB("carts", "*", "user_id = %s ORDER BY product_id", user_id)
+
+        if cart_info is None or len(cart_info) == 0:
             return {}
-            #return JSONResponse(status_code=200, content=dict(msg="empty"))
+
+        cond = ''
+        for info in cart_info:
+            cond = "{a} {b},".format(a=cond, b=info.get("product_id"))
+
+        
+        product_info = conn.selectDB("products", "*", "id in ({cond})".format(cond=cond[:-1]) )
+       
+        return { "product_info": product_info, "cart_info" :cart_info }
 
 
 @router.post(
@@ -186,14 +204,25 @@ async def users_user_id_carts_post(
 @router.put(
     "/users/{userId}/Carts",
     responses={
-        200: {"description": "Success Resopnse with path param"},
+        200: {"model": str, "description": "Success Resopnse with path param"},
         400: {"model": str, "description": "Fail Resopnse with path param"},
     },
     tags=["users"],
     summary="Update the user&#39;s cart information",
 )
 async def users_user_id_carts_put(
+    cart : Cart2,
     userId: int = Path(None, description="Reads and displays user&#39;s cart information."),
-    inline_object3: InlineObject3 = Body(None, description=""),
-) -> None:
-    ...
+    # inline_object3: InlineObject3 = Body(None, description=""),
+) -> str:
+    print("update")
+    product_id = cart.product_id
+    quantity = cart.quantity
+
+    with get_db_conn() as conn:
+        result = conn.updateDB("carts", "quantity=%s", "user_id=%s and product_id=%s",quantity, userId, product_id)
+    
+    print(quantity, userId, product_id)
+    return {"quantity" : quantity, "user_id" : userId, "product_id" : product_id}
+
+
