@@ -33,7 +33,7 @@ app = FastAPI(
     version="1.0",
 )
 
-urls = "http://localhost,http://localhost:80" + (os.environ.get("ORIGINS_URL") or '')
+urls = os.environ.get("ORIGINS_URL") or "http://localhost,http://localhost:80"
 
 origins = urls.split(",")
 
@@ -56,18 +56,6 @@ db_port = os.environ.get("DB_PORT")  or "5432"
 db_name = os.environ.get("DB_NAME") or "mdl"
 
 get_db_pool().init_app(app, DB_HOST = db_host, DB_PORT = db_port, DB_USER = db_user, DB_PW = db_pw, DB_NAME = db_name )
-
-@app.get(
-    "/test",
-    responses={
-        200: {"model": str, "description": "Success Resopnse"},
-    },
-    tags=["products"],
-    summary="Get the products in the store",
-)
-async def test(
-) -> str:
-    return db_name
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
