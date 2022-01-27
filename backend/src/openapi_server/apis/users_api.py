@@ -34,7 +34,7 @@ class Cart(BaseModel):
     productID: int
     quantity : int
     
-class Cart2(BaseModel):
+class CartDBInfo(BaseModel):
     product_id: int
     quantity : int
     
@@ -128,7 +128,7 @@ async def users_signin_post(
     summary="Delete the user&#39;s cart item",
 )
 async def users_user_id_carts_delete(
-    cart : Cart2,
+    cart : CartDBInfo,
     userId: int = Path(None, description="Reads and displays user&#39;s cart information."),
     # inline_object5: InlineObject5 = Body(None, description=""),
 ) -> None:
@@ -137,7 +137,7 @@ async def users_user_id_carts_delete(
         if cart.product_id == 0:
             result = conn.deleteDB ("carts", "user_id=%s", userId  )
         else :
-            result = conn.deleteDB ("carts", "user_id=%s and product_id=%s", userId,cart.productID )
+            result = conn.deleteDB ("carts", "user_id=%s and product_id=%s", userId,cart.product_id )
     print(userId, cart.product_id) 
     return {"user_id" : userId, "product_id":cart.product_id }
 
@@ -145,14 +145,14 @@ async def users_user_id_carts_delete(
 @router.get(
     "/users/{userId}/Carts",
     responses={
-        200: {"model": List[object], "description": "Success Resopnse"},
+        200: {"model": str, "description": "Success Resopnse"},
     },
     tags=["users"],
     summary="Get the user&#39;s cart information",
 )
 async def users_user_id_carts_get(
     userId: int = Path(None, description="Reads and displays user&#39;s cart information."),
-) -> List[object]:
+) -> str:
     with get_db_conn() as conn:
         result = conn.selectDB("users", "id", "id = %s", userId)
         
@@ -208,7 +208,7 @@ async def users_user_id_carts_post(
     summary="Update the user&#39;s cart information",
 )
 async def users_user_id_carts_put(
-    cart : Cart2,
+    cart : CartDBInfo,
     userId: int = Path(None, description="Reads and displays user&#39;s cart information."),
     #inline_object3: InlineObject3 = Body(None, description=""),
 ) -> str:
