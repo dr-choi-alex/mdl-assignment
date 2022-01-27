@@ -1,8 +1,3 @@
-from email.errors import NonPrintableDefect
-from ntpath import join
-from operator import length_hint
-from posixpath import split
-from tkinter.tix import COLUMN
 from fastapi import FastAPI
 import psycopg2
 from psycopg2 import pool
@@ -110,7 +105,7 @@ class DBPool:
 
 		self._db_user = kwargs.get("DB_USER") or 'postgres'
 		self._db_pw = kwargs.get("DB_PW") or '1234'
-		self._db_host = kwargs.get("DB_HOST") or '10.99.80.67'
+		self._db_host = kwargs.get("DB_HOST") or 'localhost'
 		self._db_port = kwargs.get("DB_PORT") or '5432'
 		self._db_name = kwargs.get("DB_NAME") or 'postgres'
 
