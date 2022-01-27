@@ -33,11 +33,8 @@ app = FastAPI(
     version="1.0",
 )
 
-
-origins = [
-    "http://localhost",
-    "http://localhost:4200",
-]
+urls = ",".split(os.environ.get("ORIGINS_URL") or "http://localhost, http://localhost:80")
+origins = urls
 
 app.add_middleware(
     CORSMiddleware,
