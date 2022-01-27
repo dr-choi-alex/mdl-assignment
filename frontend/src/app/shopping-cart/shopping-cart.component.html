@@ -22,7 +22,7 @@
                     </div>
                     <div class="cart-section remove-wrap">
                         <!-- <a class="remove-button" (click)="removeItem(item)">x</a> -->
-                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true" (click)="deleteItem(cart_data[i])" tooltip="Remove">&times;</span></button>
+                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true" (click)="removeItem(item,cart_data[i].user_id)" tooltip="Remove">&times;</span></button>
                     </div>
                 </div>
             </li>
@@ -44,7 +44,7 @@
                         <span class="pull-left">Total</span>
                         <span class="pull-right">${{total}}</span>
                     </div>
-                    <a class="btn btn-success btn-check-out" [routerLink]="['../']" (click)="onCheckOut()">CHECK OUT</a>
+                    <a class="btn btn-success btn-check-out" [routerLink]="['../']" (click)="onCheckOut(cart_data[0].user_id)">CHECK OUT</a>
                 </div>
             </div>
         </section>
