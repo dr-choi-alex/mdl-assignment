@@ -1,30 +1,11 @@
-FROM python:3.7 AS builder
+FROM python:3.7
 
-WORKDIR /usr/src/app
+COPY ./requirements.txt ./requirements.txt
 
-RUN python3 -m venv /venv
-ENV PATH="/venv/bin:$PATH"
+RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
 
-RUN pip install --upgrade pip
+COPY ./src/openapi_server /app
 
-COPY . .
-RUN pip install --no-cache-dir .
+WORKDIR /app
 
-
-FROM python:3.7 AS test_runner
-WORKDIR /tmp
-COPY --from=builder /venv /venv
-COPY --from=builder /usr/src/app/tests tests
-ENV PATH=/venv/bin:$PATH
-
-# install test dependencies
-RUN pip install pytest
-
-# run tests
-RUN pytest tests
-
-
-FROM python:3.7 AS service
-WORKDIR /root/app/site-packages
-COPY --from=test_runner /venv /venv
-ENV PATH=/venv/bin:$PATH
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
